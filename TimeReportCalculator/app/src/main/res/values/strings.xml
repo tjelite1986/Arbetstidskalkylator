@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tidrapport Kalkylator</string>
+    <string name="time_report_title">📊 Tidrapport med Löneberäkning och OB-tillägg</string>
+    <string name="base_pay">Grundlön (kr/tim)</string>
+    <string name="tax_rate">Skattesats (%)</string>
+    <string name="add_day">Lägg till dag</string>
+    <string name="calculate_total">Beräkna totalt</string>
+    <string name="clear_data">Rensa all data</string>
+    <string name="date">Datum</string>
+    <string name="day">Dag</string>
+    <string name="red_day">Röd dag</string>
+    <string name="sick_day">Sjukdag</string>
+    <string name="start_time">Starttid</string>
+    <string name="end_time">Sluttid</string>
+    <string name="break_start">Rast Start</string>
+    <string name="break_end">Rast Slut</string>
+    <string name="break_minutes">Rast (min)</string>
+    <string name="work_hours">Arbetstid</string>
+    <string name="base_pay_amount">Grundlön</string>
+    <string name="ob_pay">OB-tillägg</string>
+    <string name="total_pay">Totalt brutto</string>
+    <string name="tax_amount">Skatt</string>
+    <string name="net_pay">Nettolön</string>
+    <string name="remove">Ta bort</string>
+    <string name="settings">Inställningar</string>
+    <string name="current_month">Denna månaden</string>
+    <string name="last_month">Förra månaden</string>
+    <string name="all_rows">Alla rader</string>
+    <string name="custom_period">Anpassad period</string>
+    <string name="from_date">Från</string>
+    <string name="to_date">Till</string>
+    <string name="apply">Tillämpa</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Avbryt</string>
+</resources>
