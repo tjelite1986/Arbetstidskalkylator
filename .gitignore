@@ -1,0 +1,157 @@
+# Android Studio / IntelliJ IDEA
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/dictionaries
+/.idea/gradle.xml
+/.idea/jarRepositories.xml
+/.idea/compiler.xml
+/.idea/runConfigurations.xml
+/.idea/artifacts
+/.idea/deploymentTargetDropDown.xml
+/.idea/render.experimental.xml
+/.idea/migrations.xml
+.DS_Store
+
+# Android Build
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Gradle
+.gradle/
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# APK/Bundle files (keep release versions for GitHub releases)
+*.apk
+*.aab
+# But keep releases folder if it exists
+!/releases/
+
+# Log Files
+*.log
+
+# Android Profiling
+*.hprof
+
+# Keystore files (IMPORTANT: Never commit these!)
+*.jks
+*.keystore
+key.properties
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Android Virtual Device
+*.avd
+
+# Compiled Java class files
+*.class
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Google Services (uncomment if using Firebase)
+# google-services.json
+
+# NDK
+obj/
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Editor-based Rest Client
+.idea/httpRequests
+
+# Android Studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
+
+# Android Lint
+lint-report.html
+lint-report_files/
+lint-baseline.xml
+
+# Version control
+.svn/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Development environment files
+.vscode/
+*.swp
+*.swo
+
+# Application specific
+version.properties
+
+# Large files that shouldn't be in git
+commandlinetools-linux-*.zip
+gradle-*.zip
+gradle-*-bin.zip
+
+# JDK files (too large for git)
+jdk-*/
+
+# Android SDK files (too large for git)
+android-sdk/
+
+# Gradle distributions
+gradle-*/
+
+# Photos/screenshots (optional - you might want to keep some)
+photos/
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Web server files (if not needed in main project)
+webserver/
+
+# Other Android projects (if this is a multi-project workspace)
+MyAndroidApp/
+SimpleNotePad/
+
+# Session files
+ANDROID_SESSION_CONTEXT.md
