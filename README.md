@@ -1,22 +1,24 @@
-# 📊 Tidsregistrering och Löne-Kalkylator
+# 📊 Arbetstidskalkylator
 
 > **Professionell tidrapporterings- och löneberäkningsapp för svenska detaljhandelsanställda**
 
 [![Android](https://img.shields.io/badge/Android-21%2B-green.svg)](https://developer.android.com)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-blue.svg)](https://kotlinlang.org)
 [![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-2024.02.00-brightgreen.svg)](https://developer.android.com/jetpack/compose)
-[![Release](https://img.shields.io/github/v/release/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-?include_prereleases&label=Latest%20Release)](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/releases/latest)
-[![Issues](https://img.shields.io/github/issues/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-)](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/issues)
-[![License](https://img.shields.io/github/license/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/tjelite1986/Arbetstidskalkylator?include_prereleases&label=Latest%20Release)](https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest)
+[![Issues](https://img.shields.io/github/issues/tjelite1986/Arbetstidskalkylator)](https://github.com/tjelite1986/Arbetstidskalkylator/issues)
+[![License](https://img.shields.io/github/license/tjelite1986/Arbetstidskalkylator)](LICENSE)
 
 En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjälpa detaljhandelsanställda att beräkna arbetstid, OB-ersättningar och löner enligt **Detaljhandelsavtalet 2025-2026**.
 
 ## ✨ Funktioner
 
 ### 🕐 **Tidsrapportering**
-- **📅 Ny AddDayDialog** - Fullskärms popup för att lägga till arbetsdagar
+- **📅 Förbättrad AddDayDialog** - Fullskärms popup med klickbara tidsväljare
 - **⏰ Intelligent tidsregistrering** med start- och sluttider
-- **🍽️ Automatiska raster** baserade på arbetstid eller manuell rastinmatning
+- **🍽️ Smarta rastinställningar** - både klickbara tider och direktinmatning
+- **⏱️ Klickbara tidsväljare** för alla tidsfält med intuitivt gränssnitt
+- **📅 Kalenderväljare** för enkelt datumval
 - **✅ Smart validering** av tider och arbetstimmar med svenska felmeddelanden
 - **📊 Periodfiltrering** för vecka, månad eller anpassad period
 
@@ -57,8 +59,8 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 ### Ladda ner
 
 #### 📦 **GitHub Releases (Rekommenderat)**
-1. Gå till [🚀 Releases](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/releases/latest)
-2. Ladda ner senaste **APK-fil**
+1. Gå till [🚀 Releases](https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest)
+2. Ladda ner senaste **APK-fil** (v1.1.71-beta)
 3. Öppna APK-filen på din Android-enhet
 4. Följ installationsinstruktionerna
 5. Öppna appen och börja registrera arbetstid!
@@ -66,24 +68,25 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 #### 🔧 **För Utvecklare**
 ```bash
 # Klona repository
-git clone https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-.git
+git clone https://github.com/tjelite1986/Arbetstidskalkylator.git
 
 # Bygg själv
-cd Tidsregistrering-och-Lon-Kalkylator-
+cd Arbetstidskalkylator
 ./gradlew assembleDebug
 ```
 
 ## 📖 Snabbstart
 
 ### 🆕 **Lägg till din första arbetsdag**
-1. **Tryck på ➕-knappen** - Ny dialog öppnas
-2. **📅 Välj datum** med datumnavigering (←/→ knappar)
-3. **⏰ Ange arbetstider** (start/slut) - förfyllt med dina standardvärden
-4. **🍽️ Konfigurera raster**:
+1. **Tryck på ➕-knappen** - Förbättrad AddDayDialog öppnas
+2. **📅 Välj datum** med kalenderväljare och navigeringsknappar (←/→)
+3. **⏰ Ange arbetstider** med klickbara tidsväljare eller direktinmatning
+4. **🍽️ Konfigurera raster** med förbättrade inställningar:
    - **Automatisk**: Systemet beräknar raster baserat på arbetstid
-   - **Manuell**: Ange rast-start/slut eller antal minuter
-5. **📝 Lägg till beskrivning** (valfritt) - "Lagerarbete", "Kundtjänst" etc.
-6. **✅ Tryck "Lägg till"** - Dagen sparas i listan
+   - **Manuell**: Klickbara tider eller direktinmatning av rastminuter
+5. **🛠️ Använd mall** - Knappen är nu placerad överst för enkel åtkomst
+6. **📝 Lägg till beskrivning** (valfritt) - "Lagerarbete", "Kundtjänst" etc.
+7. **✅ Tryck "Lägg till"** - Dagen sparas i listan
 
 ### ⚡ **Snabbberäkning**
 1. **📋 Fyll i alla arbetsdagar** för perioden
@@ -134,7 +137,7 @@ cd Tidsregistrering-och-Lon-Kalkylator-
 ### 🐛 **Rapportera problem**
 Hittat en bugg eller har en funktionsförfrågan? 
 
-📋 [**Skapa en Issue**](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/issues/new/choose)
+📋 [**Skapa en Issue**](https://github.com/tjelite1986/Arbetstidskalkylator/issues/new/choose)
 
 **Välj rätt typ:**
 - **🐛 Bug Report** - För fel och problem
@@ -142,15 +145,15 @@ Hittat en bugg eller har en funktionsförfrågan?
 - **🛠️ Custom Issue** - För support och annat
 
 ### 💬 **Diskussioner**
-För frågor och diskussioner: [💬 GitHub Discussions](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/discussions)
+För frågor och diskussioner: [💬 GitHub Discussions](https://github.com/tjelite1986/Arbetstidskalkylator/discussions)
 
 ### 🔧 **Utveckling**
 ```bash
 # Klona repository
-git clone https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-.git
+git clone https://github.com/tjelite1986/Arbetstidskalkylator.git
 
 # Öppna i Android Studio
-cd Tidsregistrering-och-Lon-Kalkylator-
+cd Arbetstidskalkylator
 
 # Bygg debug version
 ./gradlew assembleDebug
@@ -212,27 +215,35 @@ Detta projekt är licensierat under **MIT License** - se [LICENSE](LICENSE) file
 ## 📞 Support & Hjälp
 
 ### 🆘 **Behöver du hjälp?**
-- **🐛 Buggrapporter**: [Skapa Bug Report](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/issues/new?template=bug_report.yml)
-- **💡 Funktionsförslag**: [Skapa Feature Request](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/issues/new?template=feature_request.yml)
-- **❓ Allmänna frågor**: [GitHub Discussions](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/discussions)
-- **📖 Dokumentation**: [Wiki](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/wiki)
+- **🐛 Buggrapporter**: [Skapa Bug Report](https://github.com/tjelite1986/Arbetstidskalkylator/issues/new?template=bug_report.yml)
+- **💡 Funktionsförslag**: [Skapa Feature Request](https://github.com/tjelite1986/Arbetstidskalkylator/issues/new?template=feature_request.yml)
+- **❓ Allmänna frågor**: [GitHub Discussions](https://github.com/tjelite1986/Arbetstidskalkylator/discussions)
+- **📖 Dokumentation**: [Wiki](https://github.com/tjelite1986/Arbetstidskalkylator/wiki)
 
 ### 🔗 **Användbara länkar**
-- **📱 Senaste version**: [Releases](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/releases/latest)
-- **📋 Kända problem**: [Issues](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/issues)
+- **📱 Senaste version**: [Releases](https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest)
+- **📋 Kända problem**: [Issues](https://github.com/tjelite1986/Arbetstidskalkylator/issues)
 - **🏛️ Handelsavtalet**: [Handels.se](https://www.handels.se/)
 
 ## 🏆 Versionshistorik
 
-### 🚀 **v1.1.62-beta** (Senaste)
-- **✨ Ny AddDayDialog** med fullständig arbetsdag-konfiguration
-- **🔧 Förbättrad textinmatning** utan automatiska nollor
-- **📅 Interaktiv datumväljare** med navigeringsknappar
-- **🍽️ Smart rasthantering** (automatisk/manuell)
-- **✅ Förbättrad validering** med svenska felmeddelanden
+### 🚀 **v1.1.71-beta** (Senaste)
+- **🎯 Förbättrade rastinställningar** och förbättrad layout i AddDayDialog
+- **🔼 Flyttad 'Använd mall' knapp** till toppen för bättre användbarhet
+- **⏰ Klickbara tidsväljare** för alla tidsfält med intuitivt gränssnitt
+- **🍽️ Avancerad rastinmatning** med både klickbara tider och direktinmatning
+- **📅 Kalenderväljare** för enkelt datumval
+- **✨ Förbättrat användarupplevelse** i hela AddDayDialog
 
 ### 📋 **Tidigare versioner**
-Se [Release Notes](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/releases) för komplett versionshistorik.
+**v1.1.62-beta**:
+- ✨ Ny AddDayDialog med fullständig arbetsdag-konfiguration
+- 🔧 Förbättrad textinmatning utan automatiska nollor
+- 📅 Interaktiv datumväljare med navigeringsknappar
+- 🍽️ Smart rasthantering (automatisk/manuell)
+- ✅ Förbättrad validering med svenska felmeddelanden
+
+Se [Release Notes](https://github.com/tjelite1986/Arbetstidskalkylator/releases) för komplett versionshistorik.
 
 ---
 
@@ -242,10 +253,10 @@ Se [Release Notes](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalky
 
 *Hjälper dig att få rätt betalt för ditt arbete enligt Detaljhandelsavtalet*
 
-[![Download](https://img.shields.io/badge/📱%20Ladda%20ner-APK-brightgreen?style=for-the-badge)](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/releases/latest)
-[![Issues](https://img.shields.io/badge/🐛%20Rapportera-Problem-red?style=for-the-badge)](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/issues/new/choose)
-[![Discussions](https://img.shields.io/badge/💬%20Frågor-Diskussioner-blue?style=for-the-badge)](https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/discussions)
+[![Download](https://img.shields.io/badge/📱%20Ladda%20ner-APK-brightgreen?style=for-the-badge)](https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest)
+[![Issues](https://img.shields.io/badge/🐛%20Rapportera-Problem-red?style=for-the-badge)](https://github.com/tjelite1986/Arbetstidskalkylator/issues/new/choose)
+[![Discussions](https://img.shields.io/badge/💬%20Frågor-Diskussioner-blue?style=for-the-badge)](https://github.com/tjelite1986/Arbetstidskalkylator/discussions)
 
-[⬆️ Tillbaka till toppen](#-tidsregistrering-och-löne-kalkylator)
+[⬆️ Tillbaka till toppen](#-arbetstidskalkylator)
 
 </div>
