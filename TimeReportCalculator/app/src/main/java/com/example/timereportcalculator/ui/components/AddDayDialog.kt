@@ -41,6 +41,10 @@ fun AddDayDialog(
     var description by remember { mutableStateOf("") }
     var useAutomaticBreaks by remember { mutableStateOf(settings.workTimeSettings.automaticBreaks) }
     var showDatePicker by remember { mutableStateOf(false) }
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
+    var showBreakStartTimePicker by remember { mutableStateOf(false) }
+    var showBreakEndTimePicker by remember { mutableStateOf(false) }
     
     // Validation state
     var hasErrors by remember { mutableStateOf(false) }
@@ -166,23 +170,55 @@ fun AddDayDialog(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                OutlinedTextField(
-                                    value = startTime,
-                                    onValueChange = { startTime = it },
-                                    label = { Text("Starttid") },
-                                    placeholder = { Text("08:00") },
-                                    modifier = Modifier.weight(1f),
-                                    singleLine = true
-                                )
+                                // Klickbar starttid
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "Starttid",
+                                        style = MaterialTheme.typography.caption,
+                                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                                        modifier = Modifier.padding(bottom = 4.dp)
+                                    )
+                                    OutlinedButton(
+                                        onClick = { showStartTimePicker = true },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Icon(
+                                            Icons.Default.AccessTime,
+                                            contentDescription = "Välj starttid",
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = if (startTime.isNotEmpty()) startTime else "08:00",
+                                            style = MaterialTheme.typography.body1
+                                        )
+                                    }
+                                }
                                 
-                                OutlinedTextField(
-                                    value = endTime,
-                                    onValueChange = { endTime = it },
-                                    label = { Text("Sluttid") },
-                                    placeholder = { Text("17:00") },
-                                    modifier = Modifier.weight(1f),
-                                    singleLine = true
-                                )
+                                // Klickbar sluttid
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "Sluttid",
+                                        style = MaterialTheme.typography.caption,
+                                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                                        modifier = Modifier.padding(bottom = 4.dp)
+                                    )
+                                    OutlinedButton(
+                                        onClick = { showEndTimePicker = true },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Icon(
+                                            Icons.Default.AccessTime,
+                                            contentDescription = "Välj sluttid",
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = if (endTime.isNotEmpty()) endTime else "17:00",
+                                            style = MaterialTheme.typography.body1
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -223,23 +259,55 @@ fun AddDayDialog(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    OutlinedTextField(
-                                        value = breakStartTime,
-                                        onValueChange = { breakStartTime = it },
-                                        label = { Text("Rast start") },
-                                        placeholder = { Text("12:00") },
-                                        modifier = Modifier.weight(1f),
-                                        singleLine = true
-                                    )
+                                    // Klickbar rast start
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "Rast start",
+                                            style = MaterialTheme.typography.caption,
+                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                                            modifier = Modifier.padding(bottom = 4.dp)
+                                        )
+                                        OutlinedButton(
+                                            onClick = { showBreakStartTimePicker = true },
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Icon(
+                                                Icons.Default.AccessTime,
+                                                contentDescription = "Välj rast start",
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = if (breakStartTime.isNotEmpty()) breakStartTime else "12:00",
+                                                style = MaterialTheme.typography.body1
+                                            )
+                                        }
+                                    }
                                     
-                                    OutlinedTextField(
-                                        value = breakEndTime,
-                                        onValueChange = { breakEndTime = it },
-                                        label = { Text("Rast slut") },
-                                        placeholder = { Text("13:00") },
-                                        modifier = Modifier.weight(1f),
-                                        singleLine = true
-                                    )
+                                    // Klickbar rast slut
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "Rast slut",
+                                            style = MaterialTheme.typography.caption,
+                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                                            modifier = Modifier.padding(bottom = 4.dp)
+                                        )
+                                        OutlinedButton(
+                                            onClick = { showBreakEndTimePicker = true },
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Icon(
+                                                Icons.Default.AccessTime,
+                                                contentDescription = "Välj rast slut",
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = if (breakEndTime.isNotEmpty()) breakEndTime else "13:00",
+                                                style = MaterialTheme.typography.body1
+                                            )
+                                        }
+                                    }
                                 }
                                 
                                 Text(
@@ -395,6 +463,55 @@ fun AddDayDialog(
                 showDatePicker = false
             },
             onDismiss = { showDatePicker = false }
+        )
+    }
+    
+    // TimePicker Dialogs
+    if (showStartTimePicker) {
+        TimePickerDialog(
+            selectedTime = try { LocalTime.parse(startTime) } catch (e: Exception) { LocalTime.of(8, 0) },
+            onTimeSelected = { selectedTime ->
+                startTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                showStartTimePicker = false
+            },
+            onDismiss = { showStartTimePicker = false },
+            title = "Välj starttid"
+        )
+    }
+    
+    if (showEndTimePicker) {
+        TimePickerDialog(
+            selectedTime = try { LocalTime.parse(endTime) } catch (e: Exception) { LocalTime.of(17, 0) },
+            onTimeSelected = { selectedTime ->
+                endTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                showEndTimePicker = false
+            },
+            onDismiss = { showEndTimePicker = false },
+            title = "Välj sluttid"
+        )
+    }
+    
+    if (showBreakStartTimePicker) {
+        TimePickerDialog(
+            selectedTime = try { LocalTime.parse(breakStartTime) } catch (e: Exception) { LocalTime.of(12, 0) },
+            onTimeSelected = { selectedTime ->
+                breakStartTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                showBreakStartTimePicker = false
+            },
+            onDismiss = { showBreakStartTimePicker = false },
+            title = "Välj rast start"
+        )
+    }
+    
+    if (showBreakEndTimePicker) {
+        TimePickerDialog(
+            selectedTime = try { LocalTime.parse(breakEndTime) } catch (e: Exception) { LocalTime.of(13, 0) },
+            onTimeSelected = { selectedTime ->
+                breakEndTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                showBreakEndTimePicker = false
+            },
+            onDismiss = { showBreakEndTimePicker = false },
+            title = "Välj rast slut"
         )
     }
 }
