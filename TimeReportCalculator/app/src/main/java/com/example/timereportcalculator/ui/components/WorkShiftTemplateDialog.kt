@@ -160,10 +160,8 @@ private fun CompactCreateForm(
     onSave: (WorkShiftTemplate) -> Unit,
     onCancel: () -> Unit
 ) {
-    var startHour by remember { mutableStateOf("08") }
-    var startMinute by remember { mutableStateOf("00") }
-    var endHour by remember { mutableStateOf("17") }
-    var endMinute by remember { mutableStateOf("00") }
+    var startTime by remember { mutableStateOf("08:00") }
+    var endTime by remember { mutableStateOf("17:00") }
     var breakMinutes by remember { mutableStateOf("60") }
     
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -173,50 +171,23 @@ private fun CompactCreateForm(
             fontWeight = FontWeight.Bold
         )
         
-        // Compact time inputs
+        // Time inputs using TimeInputField
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Start:", style = MaterialTheme.typography.body2)
+            TimeInputField(
+                time = startTime,
+                onTimeChange = { startTime = it },
+                label = "Starttid",
+                modifier = Modifier.weight(1f)
+            )
             
-            OutlinedTextField(
-                value = startHour,
-                onValueChange = { if (it.length <= 2) startHour = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-            Text(":")
-            OutlinedTextField(
-                value = startMinute,
-                onValueChange = { if (it.length <= 2) startMinute = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-        }
-        
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Slut:  ", style = MaterialTheme.typography.body2)
-            
-            OutlinedTextField(
-                value = endHour,
-                onValueChange = { if (it.length <= 2) endHour = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-            Text(":")
-            OutlinedTextField(
-                value = endMinute,
-                onValueChange = { if (it.length <= 2) endMinute = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
+            TimeInputField(
+                time = endTime,
+                onTimeChange = { endTime = it },
+                label = "Sluttid",
+                modifier = Modifier.weight(1f)
             )
         }
         
@@ -236,17 +207,13 @@ private fun CompactCreateForm(
         }
         
         // Preview
-        val preview = remember(startHour, startMinute, endHour, endMinute, breakMinutes) {
+        val preview = remember(startTime, endTime, breakMinutes) {
             try {
+                val startParsed = LocalTime.parse(startTime)
+                val endParsed = LocalTime.parse(endTime)
                 WorkShiftTemplate(
-                    startTime = LocalTime.of(
-                        startHour.toIntOrNull() ?: 8,
-                        startMinute.toIntOrNull() ?: 0
-                    ),
-                    endTime = LocalTime.of(
-                        endHour.toIntOrNull() ?: 17,
-                        endMinute.toIntOrNull() ?: 0
-                    ),
+                    startTime = startParsed,
+                    endTime = endParsed,
                     breakMinutes = breakMinutes.toIntOrNull() ?: 0
                 )
             } catch (e: Exception) {
@@ -281,15 +248,11 @@ private fun CompactCreateForm(
             Button(
                 onClick = {
                     try {
+                        val startParsed = LocalTime.parse(startTime)
+                        val endParsed = LocalTime.parse(endTime)
                         val template = WorkShiftTemplate(
-                            startTime = LocalTime.of(
-                                startHour.toIntOrNull() ?: 8,
-                                startMinute.toIntOrNull() ?: 0
-                            ),
-                            endTime = LocalTime.of(
-                                endHour.toIntOrNull() ?: 17,
-                                endMinute.toIntOrNull() ?: 0
-                            ),
+                            startTime = startParsed,
+                            endTime = endParsed,
                             breakMinutes = breakMinutes.toIntOrNull() ?: 0
                         )
                         onSave(template)
