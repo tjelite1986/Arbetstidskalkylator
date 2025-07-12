@@ -310,11 +310,20 @@ fun AddDayDialog(
                                     }
                                 }
                                 
+                                // Avskiljare mellan rast start/slut och rastminuter
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+                                )
+                                
                                 Text(
                                     text = "Eller ange rastminuter direkt:",
                                     style = MaterialTheme.typography.body2,
-                                    modifier = Modifier.padding(top = 8.dp)
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
                                 )
+                                
+                                Spacer(modifier = Modifier.height(8.dp))
                                 
                                 OutlinedTextField(
                                     value = breakMinutes,
@@ -323,7 +332,13 @@ fun AddDayDialog(
                                     placeholder = { Text("30") },
                                     modifier = Modifier.fillMaxWidth(),
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    singleLine = true
+                                    singleLine = true,
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.Schedule,
+                                            contentDescription = "Rastminuter"
+                                        )
+                                    }
                                 )
                             }
                         }
