@@ -40,6 +40,7 @@ fun AddDayDialog(
     var breakMinutes by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var useAutomaticBreaks by remember { mutableStateOf(settings.workTimeSettings.automaticBreaks) }
+    var showDatePicker by remember { mutableStateOf(false) }
     
     // Validation state
     var hasErrors by remember { mutableStateOf(false) }
@@ -108,11 +109,22 @@ fun AddDayDialog(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                                    style = MaterialTheme.typography.body1,
+                                // Klickbart datum för att öppna kalender
+                                OutlinedButton(
+                                    onClick = { showDatePicker = true },
                                     modifier = Modifier.weight(1f)
-                                )
+                                ) {
+                                    Icon(
+                                        Icons.Default.DateRange,
+                                        contentDescription = "Välj datum",
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                                        style = MaterialTheme.typography.body1
+                                    )
+                                }
                                 
                                 Row {
                                     IconButton(
@@ -372,5 +384,17 @@ fun AddDayDialog(
                 }
             }
         }
+    }
+    
+    // DatePicker Dialog
+    if (showDatePicker) {
+        DatePickerDialog(
+            selectedDate = date,
+            onDateSelected = { selectedDate ->
+                date = selectedDate
+                showDatePicker = false
+            },
+            onDismiss = { showDatePicker = false }
+        )
     }
 }
