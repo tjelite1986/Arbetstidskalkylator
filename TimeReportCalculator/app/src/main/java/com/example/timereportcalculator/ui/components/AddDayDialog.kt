@@ -40,7 +40,7 @@ fun AddDayDialog(
     var breakEndTime by remember { mutableStateOf("") }
     var breakMinutes by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var useAutomaticBreaks by remember { mutableStateOf(settings.workTimeSettings.automaticBreaks) }
+    var useAutomaticBreaks by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showStartTimePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }
@@ -299,7 +299,7 @@ fun AddDayDialog(
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text(
-                                                text = if (breakStartTime.isNotEmpty()) breakStartTime else "12:00",
+                                                text = if (breakStartTime.isNotEmpty()) breakStartTime else "Välj tid",
                                                 style = MaterialTheme.typography.body1
                                             )
                                         }
@@ -324,7 +324,7 @@ fun AddDayDialog(
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text(
-                                                text = if (breakEndTime.isNotEmpty()) breakEndTime else "13:00",
+                                                text = if (breakEndTime.isNotEmpty()) breakEndTime else "Välj tid",
                                                 style = MaterialTheme.typography.body1
                                             )
                                         }
@@ -337,30 +337,44 @@ fun AddDayDialog(
                                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
                                 )
                                 
-                                Text(
-                                    text = "Eller ange rastminuter direkt:",
-                                    style = MaterialTheme.typography.body2,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
-                                )
-                                
-                                Spacer(modifier = Modifier.height(8.dp))
-                                
-                                OutlinedTextField(
-                                    value = breakMinutes,
-                                    onValueChange = { breakMinutes = it },
-                                    label = { Text("Rastminuter") },
-                                    placeholder = { Text("30") },
+                                Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    singleLine = true,
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Schedule,
-                                            contentDescription = "Rastminuter"
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = "Eller ange:",
+                                        style = MaterialTheme.typography.body2,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),
+                                        modifier = Modifier
+                                            .align(Alignment.CenterVertically)
+                                            .width(70.dp)
+                                    )
+                                    
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "Rastminuter",
+                                            style = MaterialTheme.typography.caption,
+                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                                            modifier = Modifier.padding(bottom = 4.dp)
+                                        )
+                                        OutlinedTextField(
+                                            value = breakMinutes,
+                                            onValueChange = { breakMinutes = it },
+                                            placeholder = { Text("30") },
+                                            modifier = Modifier.fillMaxWidth(),
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                            singleLine = true,
+                                            leadingIcon = {
+                                                Icon(
+                                                    Icons.Default.Schedule,
+                                                    contentDescription = "Rastminuter",
+                                                    modifier = Modifier.size(18.dp)
+                                                )
+                                            }
                                         )
                                     }
-                                )
+                                }
                             }
                         }
                     }
@@ -529,7 +543,7 @@ fun AddDayDialog(
     
     if (showBreakStartTimePicker) {
         TimePickerDialog(
-            selectedTime = try { LocalTime.parse(breakStartTime) } catch (e: Exception) { LocalTime.of(12, 0) },
+            selectedTime = try { LocalTime.parse(breakStartTime) } catch (e: Exception) { LocalTime.now() },
             onTimeSelected = { selectedTime ->
                 breakStartTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
                 showBreakStartTimePicker = false
@@ -541,7 +555,7 @@ fun AddDayDialog(
     
     if (showBreakEndTimePicker) {
         TimePickerDialog(
-            selectedTime = try { LocalTime.parse(breakEndTime) } catch (e: Exception) { LocalTime.of(13, 0) },
+            selectedTime = try { LocalTime.parse(breakEndTime) } catch (e: Exception) { LocalTime.now() },
             onTimeSelected = { selectedTime ->
                 breakEndTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
                 showBreakEndTimePicker = false
