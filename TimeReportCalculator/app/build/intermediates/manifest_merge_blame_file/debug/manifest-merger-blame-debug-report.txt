@@ -1,8 +1,8 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="com.example.timereportcalculator.debug"
-4    android:versionCode="64"
-5    android:versionName="Beta 1.1.64-debug" >
+4    android:versionCode="66"
+5    android:versionName="Beta 1.1.66-debug" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="21"

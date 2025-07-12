@@ -154,20 +154,22 @@ fun AddDayDialog(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                TimeInputField(
-                                    time = startTime,
-                                    onTimeChange = { startTime = it },
-                                    label = "Starttid",
-                                    placeholder = "08:00",
-                                    modifier = Modifier.weight(1f)
+                                OutlinedTextField(
+                                    value = startTime,
+                                    onValueChange = { startTime = it },
+                                    label = { Text("Starttid") },
+                                    placeholder = { Text("08:00") },
+                                    modifier = Modifier.weight(1f),
+                                    singleLine = true
                                 )
                                 
-                                TimeInputField(
-                                    time = endTime,
-                                    onTimeChange = { endTime = it },
-                                    label = "Sluttid",
-                                    placeholder = "17:00",
-                                    modifier = Modifier.weight(1f)
+                                OutlinedTextField(
+                                    value = endTime,
+                                    onValueChange = { endTime = it },
+                                    label = { Text("Sluttid") },
+                                    placeholder = { Text("17:00") },
+                                    modifier = Modifier.weight(1f),
+                                    singleLine = true
                                 )
                             }
                         }
@@ -209,20 +211,22 @@ fun AddDayDialog(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    TimeInputField(
-                                        time = breakStartTime,
-                                        onTimeChange = { breakStartTime = it },
-                                        label = "Rast start",
-                                        placeholder = "12:00",
-                                        modifier = Modifier.weight(1f)
+                                    OutlinedTextField(
+                                        value = breakStartTime,
+                                        onValueChange = { breakStartTime = it },
+                                        label = { Text("Rast start") },
+                                        placeholder = { Text("12:00") },
+                                        modifier = Modifier.weight(1f),
+                                        singleLine = true
                                     )
                                     
-                                    TimeInputField(
-                                        time = breakEndTime,
-                                        onTimeChange = { breakEndTime = it },
-                                        label = "Rast slut",
-                                        placeholder = "13:00",
-                                        modifier = Modifier.weight(1f)
+                                    OutlinedTextField(
+                                        value = breakEndTime,
+                                        onValueChange = { breakEndTime = it },
+                                        label = { Text("Rast slut") },
+                                        placeholder = { Text("13:00") },
+                                        modifier = Modifier.weight(1f),
+                                        singleLine = true
                                     )
                                 }
                                 
