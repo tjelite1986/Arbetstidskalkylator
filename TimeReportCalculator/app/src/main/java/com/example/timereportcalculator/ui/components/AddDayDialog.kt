@@ -18,6 +18,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.timereportcalculator.data.Settings
 import com.example.timereportcalculator.data.TimeEntry
+import com.example.timereportcalculator.data.WorkShiftTemplate
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -45,6 +46,7 @@ fun AddDayDialog(
     var showEndTimePicker by remember { mutableStateOf(false) }
     var showBreakStartTimePicker by remember { mutableStateOf(false) }
     var showBreakEndTimePicker by remember { mutableStateOf(false) }
+    var showWorkShiftTemplateDialog by remember { mutableStateOf(false) }
     
     // Validation state
     var hasErrors by remember { mutableStateOf(false) }
@@ -87,6 +89,25 @@ fun AddDayDialog(
                 }
                 
                 Divider(modifier = Modifier.padding(vertical = 8.dp))
+                
+                // Template button
+                OutlinedButton(
+                    onClick = { showWorkShiftTemplateDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colors.primary
+                    )
+                ) {
+                    Icon(
+                        Icons.Default.Schedule,
+                        contentDescription = "Arbetspass-mallar",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Använd mall")
+                }
+                
+                Spacer(modifier = Modifier.height(8.dp))
                 
                 // Scrollable content
                 Column(
@@ -529,4 +550,17 @@ fun AddDayDialog(
             title = "Välj rast slut"
         )
     }
+    
+    // WorkShiftTemplateDialog
+    WorkShiftTemplateDialog(
+        isOpen = showWorkShiftTemplateDialog,
+        onDismiss = { showWorkShiftTemplateDialog = false },
+        onTemplateSelected = { template ->
+            startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+            endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+            breakMinutes = template.breakMinutes.toString()
+            useAutomaticBreaks = false
+            showWorkShiftTemplateDialog = false
+        }
+    )
 }

@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 69,
-      "versionName": "Beta 1.1.69-debug",
+      "versionCode": 70,
+      "versionName": "Beta 1.1.70-debug",
       "outputFile": "AndroidManifest.xml"
     }
   ],
