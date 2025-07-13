@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.timereportcalculator.data.*
+import com.example.timereportcalculator.ui.components.TimePickerDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.text.DecimalFormat
@@ -706,6 +707,8 @@ private fun WorkTimeContent(
     settings: Settings,
     onSettingsChange: (Settings) -> Unit
 ) {
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -735,35 +738,55 @@ private fun WorkTimeContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedTextField(
-                value = settings.workTimeSettings.defaultStartTime,
-                onValueChange = { newValue ->
-                    onSettingsChange(settings.copy(
-                        workTimeSettings = settings.workTimeSettings.copy(
-                            defaultStartTime = newValue
-                        )
-                    ))
-                },
-                label = { Text("Starttid") },
-                placeholder = { Text("08:00") },
-                modifier = Modifier.weight(1f),
-                singleLine = true
-            )
+            // Start time picker
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Starttid",
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                OutlinedButton(
+                    onClick = { showStartTimePicker = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.AccessTime,
+                        contentDescription = "Välj starttid",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = settings.workTimeSettings.defaultStartTime,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
             
-            OutlinedTextField(
-                value = settings.workTimeSettings.defaultEndTime,
-                onValueChange = { newValue ->
-                    onSettingsChange(settings.copy(
-                        workTimeSettings = settings.workTimeSettings.copy(
-                            defaultEndTime = newValue
-                        )
-                    ))
-                },
-                label = { Text("Sluttid") },
-                placeholder = { Text("17:00") },
-                modifier = Modifier.weight(1f),
-                singleLine = true
-            )
+            // End time picker
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Sluttid",
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                OutlinedButton(
+                    onClick = { showEndTimePicker = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.AccessTime,
+                        contentDescription = "Välj sluttid",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = settings.workTimeSettings.defaultEndTime,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
         }
         
         // Automatic breaks
@@ -998,6 +1021,47 @@ private fun WorkTimeContent(
                 }
             }
         }
+    }
+    
+    // Time pickers
+    if (showStartTimePicker) {
+        TimePickerDialog(
+            selectedTime = try { 
+                java.time.LocalTime.parse(settings.workTimeSettings.defaultStartTime) 
+            } catch (e: Exception) { 
+                java.time.LocalTime.of(8, 0) 
+            },
+            onTimeSelected = { selectedTime ->
+                onSettingsChange(settings.copy(
+                    workTimeSettings = settings.workTimeSettings.copy(
+                        defaultStartTime = selectedTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                    )
+                ))
+                showStartTimePicker = false
+            },
+            onDismiss = { showStartTimePicker = false },
+            title = "Välj starttid"
+        )
+    }
+    
+    if (showEndTimePicker) {
+        TimePickerDialog(
+            selectedTime = try { 
+                java.time.LocalTime.parse(settings.workTimeSettings.defaultEndTime) 
+            } catch (e: Exception) { 
+                java.time.LocalTime.of(17, 0) 
+            },
+            onTimeSelected = { selectedTime ->
+                onSettingsChange(settings.copy(
+                    workTimeSettings = settings.workTimeSettings.copy(
+                        defaultEndTime = selectedTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                    )
+                ))
+                showEndTimePicker = false
+            },
+            onDismiss = { showEndTimePicker = false },
+            title = "Välj sluttid"
+        )
     }
 }
 

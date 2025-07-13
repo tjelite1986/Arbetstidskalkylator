@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.timereportcalculator.data.Settings
 import com.example.timereportcalculator.data.TimeEntry
 import com.example.timereportcalculator.data.WorkShiftTemplate
+import com.example.timereportcalculator.data.WorkShiftTemplateManager
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -51,6 +53,11 @@ fun AddDayDialog(
     // Validation state
     var hasErrors by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+    
+    // Template manager
+    val context = LocalContext.current
+    val templateManager = remember { WorkShiftTemplateManager(context) }
+    val favoriteTemplates = remember { mutableStateOf(templateManager.getFavoriteTemplates()) }
     
     Dialog(
         onDismissRequest = onDismiss,
@@ -174,6 +181,103 @@ fun AddDayDialog(
                         }
                     }
                     
+                    // Favorit-mallar sektion
+                    if (favoriteTemplates.value.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.05f)
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(
+                                    text = "⭐ Favorit-mallar",
+                                    style = MaterialTheme.typography.subtitle1,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colors.secondary,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    val favorites = favoriteTemplates.value
+                                    val firstRow = favorites.take(2)
+                                    val secondRow = favorites.drop(2).take(2)
+                                    
+                                    // Första raden
+                                    if (firstRow.isNotEmpty()) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            firstRow.forEach { template ->
+                                                Button(
+                                                    onClick = {
+                                                        startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                                        endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                                        breakMinutes = template.breakMinutes.toString()
+                                                        useAutomaticBreaks = false
+                                                    },
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = Color.Transparent,
+                                                        contentColor = MaterialTheme.colors.secondary
+                                                    ),
+                                                    border = androidx.compose.foundation.BorderStroke(
+                                                        1.dp,
+                                                        MaterialTheme.colors.secondary
+                                                    ),
+                                                    modifier = Modifier.weight(1f)
+                                                ) {
+                                                    Text(
+                                                        text = template.getShortDisplayText(),
+                                                        style = MaterialTheme.typography.caption,
+                                                        maxLines = 1
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Andra raden
+                                    if (secondRow.isNotEmpty()) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            secondRow.forEach { template ->
+                                                Button(
+                                                    onClick = {
+                                                        startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                                        endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                                        breakMinutes = template.breakMinutes.toString()
+                                                        useAutomaticBreaks = false
+                                                    },
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = Color.Transparent,
+                                                        contentColor = MaterialTheme.colors.secondary
+                                                    ),
+                                                    border = androidx.compose.foundation.BorderStroke(
+                                                        1.dp,
+                                                        MaterialTheme.colors.secondary
+                                                    ),
+                                                    modifier = Modifier.weight(1f)
+                                                ) {
+                                                    Text(
+                                                        text = template.getShortDisplayText(),
+                                                        style = MaterialTheme.typography.caption,
+                                                        maxLines = 1
+                                                    )
+                                                }
+                                            }
+                                            
+                                            // Fyll ut andra raden med tom space om det bara finns 1 favorit på rad 2
+                                            if (secondRow.size == 1) {
+                                                Spacer(modifier = Modifier.weight(1f))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     // Arbetstider-sektion
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -249,29 +353,69 @@ fun AddDayDialog(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            Column {
                                 Text(
                                     text = "🍽️ Raster",
                                     style = MaterialTheme.typography.subtitle1,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(bottom = 8.dp)
                                 )
                                 
-                                Switch(
-                                    checked = useAutomaticBreaks,
-                                    onCheckedChange = { useAutomaticBreaks = it }
-                                )
+                                // Prominent toggle for automatic breaks
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    backgroundColor = if (useAutomaticBreaks) 
+                                        MaterialTheme.colors.primary.copy(alpha = 0.1f)
+                                    else 
+                                        MaterialTheme.colors.surface,
+                                    border = androidx.compose.foundation.BorderStroke(
+                                        width = 2.dp,
+                                        color = if (useAutomaticBreaks)
+                                            MaterialTheme.colors.primary
+                                        else
+                                            MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+                                    )
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(12.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(
+                                                text = if (useAutomaticBreaks) "Automatiska raster aktiverade" else "Manuell rastinmatning",
+                                                style = MaterialTheme.typography.body1,
+                                                fontWeight = FontWeight.Medium,
+                                                color = if (useAutomaticBreaks)
+                                                    MaterialTheme.colors.primary
+                                                else
+                                                    MaterialTheme.colors.onSurface
+                                            )
+                                            Text(
+                                                text = if (useAutomaticBreaks) 
+                                                    "Raster beräknas automatiskt" 
+                                                else 
+                                                    "Ange rasttider manuellt",
+                                                style = MaterialTheme.typography.caption,
+                                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                                            )
+                                        }
+                                        
+                                        Switch(
+                                            checked = useAutomaticBreaks,
+                                            onCheckedChange = { useAutomaticBreaks = it },
+                                            colors = SwitchDefaults.colors(
+                                                checkedThumbColor = Color.White,
+                                                checkedTrackColor = MaterialTheme.colors.primary,
+                                                uncheckedThumbColor = Color.White,
+                                                uncheckedTrackColor = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
+                                            )
+                                        )
+                                    }
+                                }
                             }
-                            
-                            Text(
-                                text = if (useAutomaticBreaks) "Automatiska raster aktiverade" else "Manuell rastinmatning",
-                                style = MaterialTheme.typography.body2,
-                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
                             
                             if (!useAutomaticBreaks) {
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -337,42 +481,53 @@ fun AddDayDialog(
                                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
                                 )
                                 
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                                Column {
                                     Text(
-                                        text = "Eller ange:",
+                                        text = "Rastminuter",
                                         style = MaterialTheme.typography.body2,
                                         fontWeight = FontWeight.Medium,
                                         color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),
-                                        modifier = Modifier
-                                            .align(Alignment.CenterVertically)
-                                            .width(70.dp)
+                                        modifier = Modifier.padding(bottom = 8.dp)
                                     )
                                     
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                                            text = "Rastminuter",
-                                            style = MaterialTheme.typography.caption,
-                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
-                                            modifier = Modifier.padding(bottom = 4.dp)
-                                        )
-                                        OutlinedTextField(
-                                            value = breakMinutes,
-                                            onValueChange = { breakMinutes = it },
-                                            placeholder = { Text("30") },
-                                            modifier = Modifier.fillMaxWidth(),
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                            singleLine = true,
-                                            leadingIcon = {
-                                                Icon(
-                                                    Icons.Default.Schedule,
-                                                    contentDescription = "Rastminuter",
-                                                    modifier = Modifier.size(18.dp)
+                                    // Predefined break buttons
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        listOf(15, 30, 45, 60).forEach { minutes ->
+                                            val isSelected = breakMinutes == minutes.toString()
+                                            
+                                            Button(
+                                                onClick = { 
+                                                    breakMinutes = if (isSelected) "" else minutes.toString()
+                                                },
+                                                colors = if (isSelected) {
+                                                    ButtonDefaults.buttonColors(
+                                                        backgroundColor = MaterialTheme.colors.primary,
+                                                        contentColor = MaterialTheme.colors.onPrimary
+                                                    )
+                                                } else {
+                                                    ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = Color.Transparent,
+                                                        contentColor = MaterialTheme.colors.primary
+                                                    )
+                                                },
+                                                border = if (!isSelected) {
+                                                    androidx.compose.foundation.BorderStroke(
+                                                        1.dp, 
+                                                        MaterialTheme.colors.primary
+                                                    )
+                                                } else null,
+                                                modifier = Modifier.weight(1f)
+                                            ) {
+                                                Text(
+                                                    text = "$minutes",
+                                                    style = MaterialTheme.typography.body1,
+                                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                                 )
                                             }
-                                        )
+                                        }
                                     }
                                 }
                             }
@@ -568,13 +723,22 @@ fun AddDayDialog(
     // WorkShiftTemplateDialog
     WorkShiftTemplateDialog(
         isOpen = showWorkShiftTemplateDialog,
-        onDismiss = { showWorkShiftTemplateDialog = false },
+        onDismiss = { 
+            // Update favorites when dialog closes
+            favoriteTemplates.value = templateManager.getFavoriteTemplates()
+            showWorkShiftTemplateDialog = false 
+        },
         onTemplateSelected = { template ->
             startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
             endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
             breakMinutes = template.breakMinutes.toString()
             useAutomaticBreaks = false
+            favoriteTemplates.value = templateManager.getFavoriteTemplates()
             showWorkShiftTemplateDialog = false
+        },
+        onFavoritesChanged = {
+            // Update favorites immediately when changed
+            favoriteTemplates.value = templateManager.getFavoriteTemplates()
         }
     )
 }

@@ -25,7 +25,8 @@ import java.time.LocalTime
 fun WorkShiftTemplateDialog(
     isOpen: Boolean,
     onDismiss: () -> Unit,
-    onTemplateSelected: (WorkShiftTemplate) -> Unit
+    onTemplateSelected: (WorkShiftTemplate) -> Unit,
+    onFavoritesChanged: (() -> Unit)? = null
 ) {
     if (isOpen) {
         val context = LocalContext.current
@@ -75,6 +76,11 @@ fun WorkShiftTemplateDialog(
                                     onDelete = {
                                         templateManager.deleteTemplate(template.id)
                                         templates = templateManager.getAllTemplates()
+                                    },
+                                    onToggleFavorite = {
+                                        templateManager.toggleFavorite(template.id)
+                                        templates = templateManager.getAllTemplates()
+                                        onFavoritesChanged?.invoke()
                                     }
                                 )
                             }
@@ -114,7 +120,8 @@ fun WorkShiftTemplateDialog(
 private fun CompactTemplateItem(
     template: WorkShiftTemplate,
     onSelect: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onToggleFavorite: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -139,6 +146,19 @@ private fun CompactTemplateItem(
                 )
             }
             
+            // Favorite button
+            IconButton(
+                onClick = onToggleFavorite,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    if (template.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                    contentDescription = if (template.isFavorite) "Ta bort från favoriter" else "Lägg till som favorit",
+                    tint = if (template.isFavorite) Color(0xFFFFD700) else MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+            
             // Delete button
             IconButton(
                 onClick = onDelete,
@@ -160,11 +180,12 @@ private fun CompactCreateForm(
     onSave: (WorkShiftTemplate) -> Unit,
     onCancel: () -> Unit
 ) {
-    var startHour by remember { mutableStateOf("08") }
-    var startMinute by remember { mutableStateOf("00") }
-    var endHour by remember { mutableStateOf("17") }
-    var endMinute by remember { mutableStateOf("00") }
+    var name by remember { mutableStateOf("") }
+    var startTime by remember { mutableStateOf(LocalTime.of(8, 0)) }
+    var endTime by remember { mutableStateOf(LocalTime.of(17, 0)) }
     var breakMinutes by remember { mutableStateOf("60") }
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
     
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
@@ -173,51 +194,70 @@ private fun CompactCreateForm(
             fontWeight = FontWeight.Bold
         )
         
-        // Compact time inputs
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Start:", style = MaterialTheme.typography.body2)
-            
-            OutlinedTextField(
-                value = startHour,
-                onValueChange = { if (it.length <= 2) startHour = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-            Text(":")
-            OutlinedTextField(
-                value = startMinute,
-                onValueChange = { if (it.length <= 2) startMinute = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-        }
+        // Template name
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Mallnamn") },
+            placeholder = { Text("T.ex. Kontorstid") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
         
+        // Time picker buttons
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Slut:  ", style = MaterialTheme.typography.body2)
+            // Start time
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Starttid",
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                OutlinedButton(
+                    onClick = { showStartTimePicker = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.AccessTime,
+                        contentDescription = "Välj starttid",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = startTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")),
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
             
-            OutlinedTextField(
-                value = endHour,
-                onValueChange = { if (it.length <= 2) endHour = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-            Text(":")
-            OutlinedTextField(
-                value = endMinute,
-                onValueChange = { if (it.length <= 2) endMinute = it },
-                modifier = Modifier.width(60.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
+            // End time
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Sluttid",
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                OutlinedButton(
+                    onClick = { showEndTimePicker = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.AccessTime,
+                        contentDescription = "Välj sluttid",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = endTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")),
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
         }
         
         Row(
@@ -236,17 +276,12 @@ private fun CompactCreateForm(
         }
         
         // Preview
-        val preview = remember(startHour, startMinute, endHour, endMinute, breakMinutes) {
+        val preview = remember(name, startTime, endTime, breakMinutes) {
             try {
                 WorkShiftTemplate(
-                    startTime = LocalTime.of(
-                        startHour.toIntOrNull() ?: 8,
-                        startMinute.toIntOrNull() ?: 0
-                    ),
-                    endTime = LocalTime.of(
-                        endHour.toIntOrNull() ?: 17,
-                        endMinute.toIntOrNull() ?: 0
-                    ),
+                    name = name,
+                    startTime = startTime,
+                    endTime = endTime,
                     breakMinutes = breakMinutes.toIntOrNull() ?: 0
                 )
             } catch (e: Exception) {
@@ -282,14 +317,9 @@ private fun CompactCreateForm(
                 onClick = {
                     try {
                         val template = WorkShiftTemplate(
-                            startTime = LocalTime.of(
-                                startHour.toIntOrNull() ?: 8,
-                                startMinute.toIntOrNull() ?: 0
-                            ),
-                            endTime = LocalTime.of(
-                                endHour.toIntOrNull() ?: 17,
-                                endMinute.toIntOrNull() ?: 0
-                            ),
+                            name = name,
+                            startTime = startTime,
+                            endTime = endTime,
                             breakMinutes = breakMinutes.toIntOrNull() ?: 0
                         )
                         onSave(template)
@@ -302,5 +332,30 @@ private fun CompactCreateForm(
                 Text("Spara")
             }
         }
+    }
+    
+    // Time pickers
+    if (showStartTimePicker) {
+        TimePickerDialog(
+            selectedTime = startTime,
+            onTimeSelected = { selectedTime ->
+                startTime = selectedTime
+                showStartTimePicker = false
+            },
+            onDismiss = { showStartTimePicker = false },
+            title = "Välj starttid"
+        )
+    }
+    
+    if (showEndTimePicker) {
+        TimePickerDialog(
+            selectedTime = endTime,
+            onTimeSelected = { selectedTime ->
+                endTime = selectedTime
+                showEndTimePicker = false
+            },
+            onDismiss = { showEndTimePicker = false },
+            title = "Välj sluttid"
+        )
     }
 }
