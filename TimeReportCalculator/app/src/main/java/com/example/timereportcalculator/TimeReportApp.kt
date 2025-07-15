@@ -2,16 +2,27 @@ package com.example.timereportcalculator
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -149,21 +160,55 @@ fun TimeReportApp(
     
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { 
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = 4.dp,
+                color = MaterialTheme.colors.surface
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Column {
                         Text(
                             text = stringResource(R.string.time_report_title),
-                            fontSize = 16.sp
+                            style = MaterialTheme.typography.h6,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colors.onSurface
                         )
                         Text(
-                            text = versionName,
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                            text = "Version $versionName",
+                            style = MaterialTheme.typography.caption,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                        )
+                    }
+                    
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colors.primary.copy(alpha = 0.2f),
+                                        MaterialTheme.colors.primary.copy(alpha = 0.1f)
+                                    )
+                                ),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccessTime,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
-            )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -175,73 +220,175 @@ fun TimeReportApp(
             }
         }
     ) { paddingValues ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colors.background,
+                            MaterialTheme.colors.surface.copy(alpha = 0.3f)
+                        )
+                    )
+                )
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
             item {
-                // Current time display
-                Text(
-                    text = "Aktuell tid: ${DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(java.time.LocalDateTime.now())}",
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(spring()),
+                    elevation = 2.dp,
+                    shape = RoundedCornerShape(12.dp),
+                    backgroundColor = MaterialTheme.colors.surface
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Schedule,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(
+                                text = "Aktuell tid",
+                                style = MaterialTheme.typography.caption,
+                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                            )
+                            Text(
+                                text = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(java.time.LocalDateTime.now()),
+                                style = MaterialTheme.typography.body1,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colors.onSurface
+                            )
+                        }
+                    }
+                }
             }
             
             item {
-                // Period selector
-                PeriodSelector(
-                    selectedPeriod = selectedPeriod,
-                    onPeriodChanged = { newPeriod ->
-                        selectedPeriod = newPeriod
-                    },
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(spring()),
+                    elevation = 3.dp,
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = MaterialTheme.colors.surface
+                ) {
+                    PeriodSelector(
+                        selectedPeriod = selectedPeriod,
+                        onPeriodChanged = { newPeriod ->
+                            selectedPeriod = newPeriod
+                        },
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
             
             item {
-                TotalSummaryCard(
-                    totalHours = totalHours,
-                    totalBasePay = totalBasePay,
-                    totalOBPay = totalOBPay,
-                    totalGrossPay = totalGrossPay,
-                    totalTax = totalTax,
-                    totalNetPay = totalNetPay
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(spring())
+                        .shadow(
+                            elevation = 6.dp,
+                            shape = RoundedCornerShape(20.dp),
+                            clip = false
+                        ),
+                    elevation = 0.dp,
+                    shape = RoundedCornerShape(20.dp),
+                    backgroundColor = MaterialTheme.colors.surface
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colors.primary.copy(alpha = 0.05f),
+                                        MaterialTheme.colors.surface
+                                    )
+                                )
+                            )
+                    ) {
+                        TotalSummaryCard(
+                            totalHours = totalHours,
+                            totalBasePay = totalBasePay,
+                            totalOBPay = totalOBPay,
+                            totalGrossPay = totalGrossPay,
+                            totalTax = totalTax,
+                            totalNetPay = totalNetPay
+                        )
+                    }
+                }
             }
             
             item {
-                // Offline file sync card
-                OfflineFileSyncCard(
-                    timeEntries = timeEntries,
-                    settings = settings,
-                    onDataLoaded = { loadedEntries, loadedSettings ->
-                        onTimeEntriesChanged(loadedEntries)
-                        onSettingsChanged(loadedSettings)
-                    },
-                    onStatusMessage = { message ->
-                        statusMessage = message
-                    },
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(spring()),
+                    elevation = 2.dp,
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = MaterialTheme.colors.surface
+                ) {
+                    OfflineFileSyncCard(
+                        timeEntries = timeEntries,
+                        settings = settings,
+                        onDataLoaded = { loadedEntries, loadedSettings ->
+                            onTimeEntriesChanged(loadedEntries)
+                            onSettingsChanged(loadedSettings)
+                        },
+                        onStatusMessage = { message ->
+                            statusMessage = message
+                        },
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
             }
             
             // Show status message if available
             if (statusMessage.isNotEmpty()) {
                 item {
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize(spring()),
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(12.dp),
                         backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.1f)
                     ) {
-                        Text(
-                            text = statusMessage,
-                            modifier = Modifier.padding(12.dp),
-                            style = MaterialTheme.typography.body2,
-                            color = MaterialTheme.colors.primary
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AccessTime,
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = statusMessage,
+                                style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.primary,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
@@ -250,54 +397,109 @@ fun TimeReportApp(
             if (errorMessage.isNotEmpty()) {
                 item {
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize(spring()),
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(12.dp),
                         backgroundColor = MaterialTheme.colors.error.copy(alpha = 0.1f)
                     ) {
-                        Text(
-                            text = errorMessage,
-                            modifier = Modifier.padding(12.dp),
-                            style = MaterialTheme.typography.body2,
-                            color = MaterialTheme.colors.error
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.error,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = errorMessage,
+                                style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.error,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
             
             item {
-                Column {
-                    // First row: Calculate and Clear buttons
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(spring()),
+                    elevation = 3.dp,
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = MaterialTheme.colors.surface
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
                     ) {
-                        Button(
-                            onClick = {
-                                try {
-                                    val calculatedEntries = timeEntries.map { entry ->
-                                        calculator.calculatePay(entry, settings)
-                                    }
-                                    onTimeEntriesChanged(calculatedEntries)
-                                    errorMessage = ""
-                                } catch (e: IllegalArgumentException) {
-                                    errorMessage = "Fel i tidsrapporter: ${e.message?.replace("End time cannot be before start time", "Sluttid kan inte vara före starttid")?.replace("Break end time cannot be before break start time", "Rast-sluttid kan inte vara före rast-starttid")?.replace("Work hours cannot be negative. Check start/end times.", "Arbetstid kan inte vara negativ. Kontrollera start- och sluttider.")?.replace("Break time cannot exceed total work time", "Rasttid kan inte överstiga total arbetstid")?.replace("Break minutes cannot be negative", "Rastminuter kan inte vara negativa")}"
-                                }
-                            }
-                        ) {
-                            Text(stringResource(R.string.calculate_total))
-                        }
+                        Text(
+                            text = "Åtgärder",
+                            style = MaterialTheme.typography.subtitle1,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colors.onSurface,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
                         
-                        Button(
-                            onClick = { onTimeEntriesChanged(emptyList()) },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.error
-                            )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Text(stringResource(R.string.clear_data))
+                            Button(
+                                onClick = {
+                                    try {
+                                        val calculatedEntries = timeEntries.map { entry ->
+                                            calculator.calculatePay(entry, settings)
+                                        }
+                                        onTimeEntriesChanged(calculatedEntries)
+                                        errorMessage = ""
+                                    } catch (e: IllegalArgumentException) {
+                                        errorMessage = "Fel i tidsrapporter: ${e.message?.replace("End time cannot be before start time", "Sluttid kan inte vara före starttid")?.replace("Break end time cannot be before break start time", "Rast-sluttid kan inte vara före rast-starttid")?.replace("Work hours cannot be negative. Check start/end times.", "Arbetstid kan inte vara negativ. Kontrollera start- och sluttider.")?.replace("Break time cannot exceed total work time", "Rasttid kan inte överstiga total arbetstid")?.replace("Break minutes cannot be negative", "Rastminuter kan inte vara negativa")}"
+                                    }
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = ButtonDefaults.elevation(
+                                    defaultElevation = 2.dp,
+                                    pressedElevation = 4.dp
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.calculate_total),
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                            
+                            Button(
+                                onClick = { onTimeEntriesChanged(emptyList()) },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.error
+                                ),
+                                elevation = ButtonDefaults.elevation(
+                                    defaultElevation = 2.dp,
+                                    pressedElevation = 4.dp
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.clear_data),
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
                     }
-                    
                 }
             }
             
@@ -306,20 +508,47 @@ fun TimeReportApp(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .animateContentSize(spring()),
+                        elevation = 4.dp,
+                        shape = RoundedCornerShape(20.dp),
+                        backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .background(
+                                        brush = Brush.radialGradient(
+                                            colors = listOf(
+                                                MaterialTheme.colors.primary.copy(alpha = 0.2f),
+                                                MaterialTheme.colors.primary.copy(alpha = 0.05f)
+                                            )
+                                        ),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colors.primary,
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(20.dp))
                             Text(
                                 text = "Inga tidsrapporter än",
                                 style = MaterialTheme.typography.h6,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.onSurface
                             )
                             Text(
                                 text = "Tryck på + för att lägga till din första dag",
                                 style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                         }
@@ -330,20 +559,47 @@ fun TimeReportApp(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .animateContentSize(spring()),
+                        elevation = 4.dp,
+                        shape = RoundedCornerShape(20.dp),
+                        backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .background(
+                                        brush = Brush.radialGradient(
+                                            colors = listOf(
+                                                MaterialTheme.colors.primary.copy(alpha = 0.2f),
+                                                MaterialTheme.colors.primary.copy(alpha = 0.05f)
+                                            )
+                                        ),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Schedule,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colors.primary,
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(20.dp))
                             Text(
                                 text = "Inga rader för vald period",
                                 style = MaterialTheme.typography.h6,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.onSurface
                             )
                             Text(
                                 text = "Välj en annan period eller lägg till fler tidsrapporter",
                                 style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                         }
@@ -352,40 +608,50 @@ fun TimeReportApp(
             }
             
             items(filteredEntries) { entry ->
-                TimeEntryCard(
-                    entry = entry,
-                    settings = settings,
-                    onEntryChange = { updatedEntry ->
-                        try {
-                            val updatedEntries = timeEntries.map { 
-                                if (it.id == updatedEntry.id) {
-                                    calculator.calculatePay(updatedEntry, settings)
-                                } else it
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(spring()),
+                    elevation = 2.dp,
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = MaterialTheme.colors.surface
+                ) {
+                    TimeEntryCard(
+                        entry = entry,
+                        settings = settings,
+                        onEntryChange = { updatedEntry ->
+                            try {
+                                val updatedEntries = timeEntries.map { 
+                                    if (it.id == updatedEntry.id) {
+                                        calculator.calculatePay(updatedEntry, settings)
+                                    } else it
+                                }
+                                onTimeEntriesChanged(updatedEntries)
+                                errorMessage = ""
+                            } catch (e: IllegalArgumentException) {
+                                // Update the entry without calculation to preserve user input
+                                val updatedEntries = timeEntries.map { 
+                                    if (it.id == updatedEntry.id) {
+                                        updatedEntry.copy(
+                                            workHours = 0.0,
+                                            basePay = 0.0,
+                                            obPay = 0.0,
+                                            totalPay = 0.0,
+                                            taxAmount = 0.0,
+                                            netPay = 0.0
+                                        )
+                                    } else it
+                                }
+                                onTimeEntriesChanged(updatedEntries)
+                                errorMessage = "Fel i tidsrapport: ${e.message?.replace("End time cannot be before start time", "Sluttid kan inte vara före starttid")?.replace("Break end time cannot be before break start time", "Rast-sluttid kan inte vara före rast-starttid")?.replace("Work hours cannot be negative. Check start/end times.", "Arbetstid kan inte vara negativ. Kontrollera start- och sluttider.")?.replace("Break time cannot exceed total work time", "Rasttid kan inte överstiga total arbetstid")?.replace("Break minutes cannot be negative", "Rastminuter kan inte vara negativa")}"
                             }
-                            onTimeEntriesChanged(updatedEntries)
-                            errorMessage = ""
-                        } catch (e: IllegalArgumentException) {
-                            // Update the entry without calculation to preserve user input
-                            val updatedEntries = timeEntries.map { 
-                                if (it.id == updatedEntry.id) {
-                                    updatedEntry.copy(
-                                        workHours = 0.0,
-                                        basePay = 0.0,
-                                        obPay = 0.0,
-                                        totalPay = 0.0,
-                                        taxAmount = 0.0,
-                                        netPay = 0.0
-                                    )
-                                } else it
-                            }
-                            onTimeEntriesChanged(updatedEntries)
-                            errorMessage = "Fel i tidsrapport: ${e.message?.replace("End time cannot be before start time", "Sluttid kan inte vara före starttid")?.replace("Break end time cannot be before break start time", "Rast-sluttid kan inte vara före rast-starttid")?.replace("Work hours cannot be negative. Check start/end times.", "Arbetstid kan inte vara negativ. Kontrollera start- och sluttider.")?.replace("Break time cannot exceed total work time", "Rasttid kan inte överstiga total arbetstid")?.replace("Break minutes cannot be negative", "Rastminuter kan inte vara negativa")}"
+                        },
+                        onDelete = { entryToDelete ->
+                            onTimeEntriesChanged(timeEntries.filter { it.id != entryToDelete.id })
                         }
-                    },
-                    onDelete = { entryToDelete ->
-                        onTimeEntriesChanged(timeEntries.filter { it.id != entryToDelete.id })
-                    }
-                )
+                    )
+                }
+            }
             }
         }
     }
