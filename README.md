@@ -60,7 +60,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 #### 📦 **GitHub Releases (Rekommenderat)**
 1. Gå till [🚀 Releases](https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest)
-2. Ladda ner senaste **APK-fil** (v1.1.71-beta)
+2. Ladda ner senaste **APK-fil** (v1.1.82-beta)
 3. Öppna APK-filen på din Android-enhet
 4. Följ installationsinstruktionerna
 5. Öppna appen och börja registrera arbetstid!
@@ -227,7 +227,7 @@ Detta projekt är licensierat under **MIT License** - se [LICENSE](LICENSE) file
 
 ## 🏆 Versionshistorik
 
-### 🚀 **v1.1.71-beta** (Senaste)
+### 🚀 **v1.1.82-beta** (Senaste)
 - **🎯 Förbättrade rastinställningar** och förbättrad layout i AddDayDialog
 - **🔼 Flyttad 'Använd mall' knapp** till toppen för bättre användbarhet
 - **⏰ Klickbara tidsväljare** för alla tidsfält med intuitivt gränssnitt
@@ -236,6 +236,14 @@ Detta projekt är licensierat under **MIT License** - se [LICENSE](LICENSE) file
 - **✨ Förbättrat användarupplevelse** i hela AddDayDialog
 
 ### 📋 **Tidigare versioner**
+**v1.1.71-beta**:
+- 🎯 Förbättrade rastinställningar och förbättrad layout i AddDayDialog
+- 🔼 Flyttad 'Använd mall' knapp till toppen för bättre användbarhet
+- ⏰ Klickbara tidsväljare för alla tidsfält med intuitivt gränssnitt
+- 🍽️ Avancerad rastinmatning med både klickbara tider och direktinmatning
+- 📅 Kalenderväljare för enkelt datumval
+- ✨ Förbättrat användarupplevelse i hela AddDayDialog
+
 **v1.1.62-beta**:
 - ✨ Ny AddDayDialog med fullständig arbetsdag-konfiguration
 - 🔧 Förbättrad textinmatning utan automatiska nollor

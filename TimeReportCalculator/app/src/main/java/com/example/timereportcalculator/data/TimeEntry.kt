@@ -14,6 +14,7 @@ data class TimeEntry(
     val breakMinutes: Int = 0,
     val isRedDay: Boolean = false,
     val isSickDay: Boolean = false,
+    val sickDayNumber: Int = 1, // 1 = karensdag (0 kr), 2-14 = 80% av grundlön
     val workHours: Double = 0.0,
     val basePay: Double = 0.0,
     val obPay: Double = 0.0,

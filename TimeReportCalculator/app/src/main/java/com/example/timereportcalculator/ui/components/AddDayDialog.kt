@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,6 +44,9 @@ fun AddDayDialog(
     var breakMinutes by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var useAutomaticBreaks by remember { mutableStateOf(false) }
+    var isSickDay by remember { mutableStateOf(false) }
+    var sickDayNumber by remember { mutableStateOf(1) }
+    var sickDayHours by remember { mutableStateOf("8.0") }
     var showDatePicker by remember { mutableStateOf(false) }
     var showStartTimePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }
@@ -178,6 +182,77 @@ fun AddDayDialog(
                                     }
                                 }
                             }
+                        }
+                    }
+                    
+                    // Sjukdag-sektion - förenklad design
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        backgroundColor = if (isSickDay) 
+                            MaterialTheme.colors.error.copy(alpha = 0.15f)
+                        else 
+                            MaterialTheme.colors.surface,
+                        border = androidx.compose.foundation.BorderStroke(
+                            width = if (isSickDay) 2.dp else 1.dp,
+                            color = if (isSickDay) 
+                                MaterialTheme.colors.error 
+                            else 
+                                MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+                        ),
+                        elevation = if (isSickDay) 4.dp else 1.dp
+                    ) {
+                        // Endast den enkla headerdesignen
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "🤒",
+                                        style = MaterialTheme.typography.h4,
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                    Text(
+                                        text = "SJUKDAG",
+                                        style = MaterialTheme.typography.h6,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isSickDay)
+                                            MaterialTheme.colors.error
+                                        else
+                                            MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                                    )
+                                }
+                                
+                                Text(
+                                    text = if (isSickDay) "Tryck för att ändra till arbetsdag" else "Tryck för att markera som sjukdag",
+                                    style = MaterialTheme.typography.caption,
+                                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
+                            }
+                            
+                            // Stor, tydlig switch
+                            Switch(
+                                checked = isSickDay,
+                                onCheckedChange = { isSickDay = it },
+                                modifier = Modifier.scale(1.2f),
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    checkedTrackColor = MaterialTheme.colors.error,
+                                    uncheckedThumbColor = Color.White,
+                                    uncheckedTrackColor = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
+                                )
+                            )
                         }
                     }
                     
@@ -590,14 +665,14 @@ fun AddDayDialog(
                     Button(
                         onClick = {
                             try {
-                                // Validate input
+                                // Validate input - arbetstider krävs alltid (även för sjukdagar)
                                 if (startTime.isBlank() || endTime.isBlank()) {
                                     errorMessage = "Start- och sluttid måste anges"
                                     hasErrors = true
                                     return@Button
                                 }
                                 
-                                // Parse times
+                                // Parse times - alltid parse för både arbets- och sjukdagar
                                 val parsedStartTime = try {
                                     LocalTime.parse(startTime)
                                 } catch (e: Exception) {
@@ -637,7 +712,24 @@ fun AddDayDialog(
                                     endTime = parsedEndTime,
                                     breakStart = parsedBreakStart,
                                     breakEnd = parsedBreakEnd,
-                                    breakMinutes = if (useAutomaticBreaks) 0 else (breakMinutes.toIntOrNull() ?: 0)
+                                    breakMinutes = if (useAutomaticBreaks) 0 else (breakMinutes.toIntOrNull() ?: 0),
+                                    isSickDay = isSickDay,
+                                    sickDayNumber = if (isSickDay) 2 else 1, // Sjukdag = dag 2 (80% sjuklön)
+                                    // För sjukdagar: använd angivna arbetstider, inte automatiska 8h
+                                    workHours = if (isSickDay && parsedStartTime != null && parsedEndTime != null) {
+                                        // Beräkna arbetstimmar från angivna tider
+                                        val totalMinutes = java.time.temporal.ChronoUnit.MINUTES.between(parsedStartTime, parsedEndTime)
+                                        val breakTime = if (parsedBreakStart != null && parsedBreakEnd != null) {
+                                            java.time.temporal.ChronoUnit.MINUTES.between(parsedBreakStart, parsedBreakEnd)
+                                        } else {
+                                            (breakMinutes.toIntOrNull() ?: 0).toLong()
+                                        }
+                                        kotlin.math.max(0, totalMinutes - breakTime) / 60.0
+                                    } else if (isSickDay) {
+                                        8.0 // Fallback till 8h om inga tider angivits
+                                    } else {
+                                        0.0
+                                    }
                                 )
                                 
                                 onConfirm(newEntry)

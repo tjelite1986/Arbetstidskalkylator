@@ -54,10 +54,26 @@ class PayCalculator {
     }
     
     private fun calculateSickPay(entry: TimeEntry, settings: Settings): TimeEntry {
-        // Sick pay is 80% of base pay for 8 hours (standard workday)
-        val sickPayHours = 8.0
-        val sickPayRate = settings.basePay * 0.8
-        val totalPay = sickPayHours * sickPayRate
+        // Svenska sjuklöneregler för detaljhandeln:
+        // Dag 1: Karensdag - ingen lön (0 kr) 
+        // Dag 2+: 80% av grundlön för angivna arbetstimmar (inte automatiska 8h)
+        
+        val sickPayHours = if (entry.sickDayNumber == 1) {
+            0.0 // Karensdag - inga timmar, ingen lön
+        } else {
+            // Använd angivna arbetstimmar från TimeEntry
+            entry.workHours
+        }
+        
+        val totalPay = if (entry.sickDayNumber == 1) {
+            // Karensdag - ingen lön
+            0.0
+        } else {
+            // Dag 2+: 80% av grundlön för angivna timmar
+            val sickPayRate = settings.basePay * 0.8
+            sickPayHours * sickPayRate
+        }
+        
         val taxAmount = totalPay * (settings.taxRate / 100.0)
         val netPay = totalPay - taxAmount
         

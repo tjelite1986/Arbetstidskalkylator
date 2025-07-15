@@ -31,7 +31,7 @@ git push -u origin v1.2.0-beta
 
 # 7. Skapa release med automatisk taggning
 gh release create v1.2.0-beta \
-  --repo tjelite1986/Tidsregistrering-och-Lon-Kalkylator- \
+  --repo tjelite1986/Arbetstidskalkylator \
   --title "🚀 v1.2.0-beta - [Titel för nya funktioner]" \
   --notes "Release notes här..." \
   --target v1.2.0-beta \
@@ -92,7 +92,7 @@ git push origin --delete $VERSION
 ## 📊 **GitHub Auto-features:**
 
 ### **"Latest Release" Badge:**
-- [![Release](https://img.shields.io/github/v/release/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-?include_prereleases&label=Latest%20Release)]
+- [![Release](https://img.shields.io/github/v/release/tjelite1986/Arbetstidskalkylator?include_prereleases&label=Latest%20Release)]
 - **Uppdateras automatiskt** till ny version
 
 ### **Auto-generated Release Notes:**
@@ -107,7 +107,7 @@ git push origin --delete $VERSION
 
 ## 🎯 **Resultat för användare:**
 
-1. **Besöker**: https://github.com/tjelite1986/Tidsregistrering-och-Lon-Kalkylator-/releases/latest
+1. **Besöker**: https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest
 2. **Ser**: "v1.2.0-beta" som senaste version
 3. **Laddar ner**: Tidsregistrerings-Kalkylator-v1.2.0-beta.apk
 4. **README badges**: Visar automatiskt ny version

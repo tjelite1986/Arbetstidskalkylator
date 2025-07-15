@@ -55,12 +55,29 @@ android {
     // Custom APK naming
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            def versionName = variant.versionName
+            def versionName = variant.versionName.replace("Beta ", "").replace("-debug", "")
             def buildType = variant.buildType.name
             if (buildType == "release") {
-                outputFileName = "Tidsregistrerings-Kalkylator-v${versionName}.apk"
+                outputFileName = "Tidsregistrerings-Kalkylator-${versionName}.apk"
             } else if (buildType == "debug") {
-                outputFileName = "Tidsregistrerings-Kalkylator-v${versionName}-beta.apk"
+                outputFileName = "Tidsregistrerings-Kalkylator-${versionName}-debug-beta.apk"
+            }
+        }
+        
+        // Copy APK to androidbuild/files directory after assembly
+        variant.assemble.doLast {
+            variant.outputs.each { output ->
+                def apkFile = output.outputFile
+                if (apkFile != null && apkFile.exists()) {
+                    def destinationDir = file('/workspace/androidbuild/files')
+                    destinationDir.mkdirs()
+                    def destinationFile = new File(destinationDir, apkFile.name)
+                    
+                    // Copy file
+                    destinationFile.bytes = apkFile.bytes
+                    
+                    println "APK copied to: ${destinationFile.absolutePath}"
+                }
             }
         }
     }
