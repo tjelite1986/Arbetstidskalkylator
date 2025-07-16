@@ -45,8 +45,6 @@ fun AddDayDialog(
     var description by remember { mutableStateOf("") }
     var useAutomaticBreaks by remember { mutableStateOf(false) }
     var isSickDay by remember { mutableStateOf(false) }
-    var sickDayNumber by remember { mutableStateOf(1) }
-    var sickDayHours by remember { mutableStateOf("8.0") }
     var showDatePicker by remember { mutableStateOf(false) }
     var showStartTimePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }

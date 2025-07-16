@@ -21,9 +21,12 @@ data class TimeEntryJson(
     val breakMinutes: Int,
     val isRedDay: Boolean,
     val isSickDay: Boolean,
+    val sickDayNumber: Int? = null,
     val workHours: Double,
     val basePay: Double,
     val obPay: Double,
+    val grossPay: Double? = null, // Nullable för bakåtkompatibilitet
+    val vacationPay: Double? = null, // Nullable för bakåtkompatibilitet
     val totalPay: Double,
     val taxAmount: Double,
     val netPay: Double,
@@ -111,9 +114,12 @@ fun TimeEntry.toJson(): TimeEntryJson {
         breakMinutes = this.breakMinutes,
         isRedDay = this.isRedDay,
         isSickDay = this.isSickDay,
+        sickDayNumber = this.sickDayNumber,
         workHours = this.workHours,
         basePay = this.basePay,
         obPay = this.obPay,
+        grossPay = this.grossPay,
+        vacationPay = this.vacationPay,
         totalPay = this.totalPay,
         taxAmount = this.taxAmount,
         netPay = this.netPay,
@@ -132,9 +138,12 @@ fun TimeEntryJson.toTimeEntry(): TimeEntry {
         breakMinutes = this.breakMinutes,
         isRedDay = this.isRedDay,
         isSickDay = this.isSickDay,
+        sickDayNumber = this.sickDayNumber ?: 1,
         workHours = this.workHours,
         basePay = this.basePay,
         obPay = this.obPay,
+        grossPay = this.grossPay ?: (this.basePay + this.obPay), // Fallback för bakåtkompatibilitet
+        vacationPay = this.vacationPay ?: 0.0, // Fallback för bakåtkompatibilitet
         totalPay = this.totalPay,
         taxAmount = this.taxAmount,
         netPay = this.netPay,

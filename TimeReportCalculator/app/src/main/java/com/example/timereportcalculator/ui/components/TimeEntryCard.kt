@@ -367,19 +367,49 @@ fun TimeEntryCard(
                         Text("${String.format("%.2f", entry.basePay)} kr")
                     }
                     
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("OB-tillägg:")
-                        Text("${String.format("%.2f", entry.obPay)} kr")
+                    // Show individual OB-tillägg if any exist
+                    if (entry.obBreakdown.isNotEmpty()) {
+                        entry.obBreakdown.forEach { (description, amount) ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(description)
+                                Text("${String.format("%.2f", amount)} kr")
+                            }
+                        }
+                    } else if (entry.obPay > 0) {
+                        // Fallback for entries without breakdown
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("OB-tillägg:")
+                            Text("${String.format("%.2f", entry.obPay)} kr")
+                        }
                     }
                     
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Totalt brutto:")
+                        Text("Bruttolön:")
+                        Text("${String.format("%.2f", entry.grossPay)} kr")
+                    }
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Semesterersättning (${String.format("%.0f", settings.vacationRate)}%):")
+                        Text("${String.format("%.2f", entry.vacationPay)} kr")
+                    }
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Totalt före skatt:")
                         Text("${String.format("%.2f", entry.totalPay)} kr", fontWeight = FontWeight.Bold)
                     }
                     

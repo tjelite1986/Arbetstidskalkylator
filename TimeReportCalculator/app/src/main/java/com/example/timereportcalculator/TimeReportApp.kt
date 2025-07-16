@@ -136,9 +136,19 @@ fun TimeReportApp(
     val totalHours = filteredEntries.sumOf { it.workHours }
     val totalBasePay = filteredEntries.sumOf { it.basePay }
     val totalOBPay = filteredEntries.sumOf { it.obPay }
-    val totalGrossPay = filteredEntries.sumOf { it.totalPay }
+    val totalGrossPay = filteredEntries.sumOf { it.grossPay }
+    val totalVacationPay = filteredEntries.sumOf { it.vacationPay }
+    val totalPayBeforeTax = filteredEntries.sumOf { it.totalPay }
     val totalTax = filteredEntries.sumOf { it.taxAmount }
     val totalNetPay = filteredEntries.sumOf { it.netPay }
+    
+    // Calculate OB breakdown totals
+    val totalOBBreakdown = mutableMapOf<String, Double>()
+    filteredEntries.forEach { entry ->
+        entry.obBreakdown.forEach { (description, amount) ->
+            totalOBBreakdown[description] = (totalOBBreakdown[description] ?: 0.0) + amount
+        }
+    }
     
     // Clear status message after showing it
     LaunchedEffect(statusMessage) {
@@ -327,8 +337,12 @@ fun TimeReportApp(
                             totalBasePay = totalBasePay,
                             totalOBPay = totalOBPay,
                             totalGrossPay = totalGrossPay,
+                            totalVacationPay = totalVacationPay,
+                            totalPayBeforeTax = totalPayBeforeTax,
                             totalTax = totalTax,
-                            totalNetPay = totalNetPay
+                            totalNetPay = totalNetPay,
+                            vacationRate = settings.vacationRate,
+                            totalOBBreakdown = totalOBBreakdown
                         )
                     }
                 }
@@ -636,6 +650,8 @@ fun TimeReportApp(
                                             workHours = 0.0,
                                             basePay = 0.0,
                                             obPay = 0.0,
+                                            grossPay = 0.0,
+                                            vacationPay = 0.0,
                                             totalPay = 0.0,
                                             taxAmount = 0.0,
                                             netPay = 0.0

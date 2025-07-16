@@ -14,8 +14,12 @@ fun TotalSummaryCard(
     totalBasePay: Double,
     totalOBPay: Double,
     totalGrossPay: Double,
+    totalVacationPay: Double,
+    totalPayBeforeTax: Double,
     totalTax: Double,
-    totalNetPay: Double
+    totalNetPay: Double,
+    vacationRate: Double = 12.0,
+    totalOBBreakdown: Map<String, Double> = emptyMap()
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -50,12 +54,42 @@ fun TotalSummaryCard(
                 Text("${String.format("%.2f", totalBasePay)} kr")
             }
             
+            // Show individual OB-tillägg if any exist
+            if (totalOBBreakdown.isNotEmpty()) {
+                totalOBBreakdown.forEach { (description, amount) ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(description)
+                        Text("${String.format("%.2f", amount)} kr")
+                    }
+                }
+            } else if (totalOBPay > 0) {
+                // Fallback for entries without breakdown
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("OB-tillägg:")
+                    Text("${String.format("%.2f", totalOBPay)} kr")
+                }
+            }
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("OB-tillägg:")
-                Text("${String.format("%.2f", totalOBPay)} kr")
+                Text("Bruttolön:")
+                Text("${String.format("%.2f", totalGrossPay)} kr")
+            }
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Semesterersättning (${String.format("%.0f", vacationRate)}%):")
+                Text("${String.format("%.2f", totalVacationPay)} kr")
             }
             
             Divider(modifier = Modifier.padding(vertical = 8.dp))
@@ -64,8 +98,8 @@ fun TotalSummaryCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Totalt brutto:", fontWeight = FontWeight.Bold)
-                Text("${String.format("%.2f", totalGrossPay)} kr", fontWeight = FontWeight.Bold)
+                Text("Totalt före skatt:", fontWeight = FontWeight.Bold)
+                Text("${String.format("%.2f", totalPayBeforeTax)} kr", fontWeight = FontWeight.Bold)
             }
             
             Row(

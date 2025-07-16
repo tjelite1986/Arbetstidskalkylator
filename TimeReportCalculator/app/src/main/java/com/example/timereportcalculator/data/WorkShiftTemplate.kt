@@ -19,7 +19,6 @@ data class WorkShiftTemplate(
     
     fun getDisplayText(): String {
         val breakText = if (breakMinutes > 0) "($breakMinutes min)" else ""
-        val hours = String.format("%.1f", getWorkHours())
         val nameText = if (name.isNotEmpty()) "$name: " else ""
         return "$nameText${startTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))}-${endTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))} $breakText"
     }

@@ -18,7 +18,9 @@ data class TimeEntry(
     val workHours: Double = 0.0,
     val basePay: Double = 0.0,
     val obPay: Double = 0.0,
-    val totalPay: Double = 0.0,
+    val grossPay: Double = 0.0, // Bruttolön (basePay + obPay)
+    val vacationPay: Double = 0.0, // Semesterersättning
+    val totalPay: Double = 0.0, // Total med semesterersättning
     val taxAmount: Double = 0.0,
     val netPay: Double = 0.0,
     val obBreakdown: Map<String, Double> = emptyMap()

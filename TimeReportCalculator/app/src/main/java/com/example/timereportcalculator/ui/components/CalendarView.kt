@@ -1,5 +1,9 @@
 package com.example.timereportcalculator.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,12 +14,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.timereportcalculator.data.TimeEntry
@@ -51,40 +59,44 @@ fun CalendarView(
     var currentDate by remember { mutableStateOf(LocalDate.now()) }
     var monthViewType by remember { mutableStateOf(MonthViewType.LIST) }
     
-    Column(modifier = modifier.fillMaxSize()) {
-        // View Type Selector
-        CalendarViewTypeSelector(
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
+        // Enhanced View Type Selector with Material 2
+        ModernCalendarViewTypeSelector(
             currentViewType = currentViewType,
             onViewTypeChanged = { currentViewType = it },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
         )
         
-        // Month View Type Selector (only visible when MONTH is selected)
+        // Enhanced Month View Type Selector
         if (currentViewType == CalendarViewType.MONTH) {
-            MonthViewTypeSelector(
+            ModernMonthViewTypeSelector(
                 currentMonthViewType = monthViewType,
                 onMonthViewTypeChanged = { monthViewType = it },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
         
-        // Date Navigation
-        DateNavigationHeader(
+        // Enhanced Date Navigation
+        ModernDateNavigationHeader(
             currentDate = currentDate,
             viewType = currentViewType,
             settings = settings,
             onDateChanged = { currentDate = it },
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
         
-        // Calendar Content
+        // Calendar Content with enhanced styling
         when (currentViewType) {
-            CalendarViewType.DAY -> DayView(currentDate, timeEntries, settings)
-            CalendarViewType.WEEK -> WeekView(currentDate, timeEntries, settings)
+            CalendarViewType.DAY -> ModernDayView(currentDate, timeEntries)
+            CalendarViewType.WEEK -> ModernWeekView(currentDate, timeEntries, settings)
             CalendarViewType.MONTH -> {
                 when (monthViewType) {
-                    MonthViewType.LIST -> MonthView(currentDate, timeEntries, settings)
-                    MonthViewType.TIMELINE -> TimelineMonthView(currentDate, timeEntries, settings)
+                    MonthViewType.LIST -> ModernMonthView(currentDate, timeEntries)
+                    MonthViewType.TIMELINE -> ModernTimelineMonthView(currentDate, timeEntries)
                 }
             }
         }
@@ -92,64 +104,103 @@ fun CalendarView(
 }
 
 @Composable
-private fun MonthViewTypeSelector(
+private fun ModernMonthViewTypeSelector(
     currentMonthViewType: MonthViewType,
     onMonthViewTypeChanged: (MonthViewType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Card(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(16.dp),
+        elevation = 4.dp
     ) {
-        MonthViewTypeButton(
-            viewType = MonthViewType.LIST,
-            currentViewType = currentMonthViewType,
-            onViewTypeChanged = onMonthViewTypeChanged,
-            icon = Icons.Default.ViewList,
-            text = "Lista"
-        )
-        
-        MonthViewTypeButton(
-            viewType = MonthViewType.TIMELINE,
-            currentViewType = currentMonthViewType,
-            onViewTypeChanged = onMonthViewTypeChanged,
-            icon = Icons.Default.Timeline,
-            text = "Tidslinje"
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            ModernMonthViewTypeButton(
+                viewType = MonthViewType.LIST,
+                currentViewType = currentMonthViewType,
+                onViewTypeChanged = onMonthViewTypeChanged,
+                icon = Icons.Default.List,
+                selectedIcon = Icons.Filled.List,
+                text = "Lista",
+                modifier = Modifier.weight(1f)
+            )
+            
+            ModernMonthViewTypeButton(
+                viewType = MonthViewType.TIMELINE,
+                currentViewType = currentMonthViewType,
+                onViewTypeChanged = onMonthViewTypeChanged,
+                icon = Icons.Default.Timeline,
+                selectedIcon = Icons.Filled.Timeline,
+                text = "Tidslinje",
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
 @Composable
-private fun MonthViewTypeButton(
+private fun ModernMonthViewTypeButton(
     viewType: MonthViewType,
     currentViewType: MonthViewType,
     onViewTypeChanged: (MonthViewType) -> Unit,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    text: String
+    icon: ImageVector,
+    selectedIcon: ImageVector,
+    text: String,
+    modifier: Modifier = Modifier
 ) {
     val isSelected = viewType == currentViewType
+    val scale by animateFloatAsState(
+        targetValue = if (isSelected) 1.02f else 1f,
+        animationSpec = spring(dampingRatio = 0.7f),
+        label = "button_scale"
+    )
+    
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) 
+            MaterialTheme.colors.primary 
+        else 
+            MaterialTheme.colors.surface,
+        animationSpec = tween(250),
+        label = "background_color"
+    )
+    
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected) 
+            MaterialTheme.colors.onPrimary 
+        else 
+            MaterialTheme.colors.onSurface,
+        animationSpec = tween(250),
+        label = "content_color"
+    )
     
     Button(
         onClick = { onViewTypeChanged(viewType) },
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface,
-            contentColor = if (isSelected) MaterialTheme.colors.onSecondary else MaterialTheme.colors.onSurface
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
         ),
+        shape = RoundedCornerShape(12.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = if (isSelected) 6.dp else 2.dp
         ),
-        modifier = Modifier
-            .height(40.dp)
-            .width(120.dp)
+        modifier = modifier
+            .height(44.dp)
+            .scale(scale)
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = icon,
+                imageVector = if (isSelected) selectedIcon else icon,
                 contentDescription = text,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(18.dp)
             )
             Text(
                 text = text,
@@ -161,72 +212,113 @@ private fun MonthViewTypeButton(
 }
 
 @Composable
-private fun CalendarViewTypeSelector(
+private fun ModernCalendarViewTypeSelector(
     currentViewType: CalendarViewType,
     onViewTypeChanged: (CalendarViewType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Card(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.15f),
+        elevation = 6.dp,
+        shape = RoundedCornerShape(20.dp)
     ) {
-        CalendarViewTypeButton(
-            viewType = CalendarViewType.DAY,
-            currentViewType = currentViewType,
-            onViewTypeChanged = onViewTypeChanged,
-            icon = Icons.Default.Today,
-            text = "Dag"
-        )
-        
-        CalendarViewTypeButton(
-            viewType = CalendarViewType.WEEK,
-            currentViewType = currentViewType,
-            onViewTypeChanged = onViewTypeChanged,
-            icon = Icons.Default.DateRange,
-            text = "Vecka"
-        )
-        
-        CalendarViewTypeButton(
-            viewType = CalendarViewType.MONTH,
-            currentViewType = currentViewType,
-            onViewTypeChanged = onViewTypeChanged,
-            icon = Icons.Default.CalendarMonth,
-            text = "Månad"
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            ModernCalendarViewTypeButton(
+                viewType = CalendarViewType.DAY,
+                currentViewType = currentViewType,
+                onViewTypeChanged = onViewTypeChanged,
+                icon = Icons.Outlined.Today,
+                selectedIcon = Icons.Filled.Today,
+                text = "Dag",
+                modifier = Modifier.weight(1f)
+            )
+            
+            ModernCalendarViewTypeButton(
+                viewType = CalendarViewType.WEEK,
+                currentViewType = currentViewType,
+                onViewTypeChanged = onViewTypeChanged,
+                icon = Icons.Outlined.DateRange,
+                selectedIcon = Icons.Filled.DateRange,
+                text = "Vecka",
+                modifier = Modifier.weight(1f)
+            )
+            
+            ModernCalendarViewTypeButton(
+                viewType = CalendarViewType.MONTH,
+                currentViewType = currentViewType,
+                onViewTypeChanged = onViewTypeChanged,
+                icon = Icons.Outlined.CalendarMonth,
+                selectedIcon = Icons.Filled.CalendarMonth,
+                text = "Månad",
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
 @Composable
-private fun CalendarViewTypeButton(
+private fun ModernCalendarViewTypeButton(
     viewType: CalendarViewType,
     currentViewType: CalendarViewType,
     onViewTypeChanged: (CalendarViewType) -> Unit,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    text: String
+    icon: ImageVector,
+    selectedIcon: ImageVector,
+    text: String,
+    modifier: Modifier = Modifier
 ) {
     val isSelected = viewType == currentViewType
+    val scale by animateFloatAsState(
+        targetValue = if (isSelected) 1.05f else 1f,
+        animationSpec = spring(dampingRatio = 0.6f),
+        label = "button_scale"
+    )
+    
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) 
+            MaterialTheme.colors.primary 
+        else 
+            MaterialTheme.colors.surface,
+        animationSpec = tween(300),
+        label = "background_color"
+    )
+    
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected) 
+            MaterialTheme.colors.onPrimary 
+        else 
+            MaterialTheme.colors.onSurface,
+        animationSpec = tween(300),
+        label = "content_color"
+    )
     
     Button(
         onClick = { onViewTypeChanged(viewType) },
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
-            contentColor = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
         ),
+        shape = RoundedCornerShape(14.dp),
         elevation = ButtonDefaults.elevation(
-            defaultElevation = if (isSelected) 8.dp else 2.dp
+            defaultElevation = if (isSelected) 8.dp else 3.dp
         ),
-        modifier = Modifier
-            .height(48.dp)
-            .width(100.dp)
+        modifier = modifier
+            .height(52.dp)
+            .scale(scale)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Icon(
-                imageVector = icon,
+                imageVector = if (isSelected) selectedIcon else icon,
                 contentDescription = text,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(22.dp)
             )
             Text(
                 text = text,
@@ -238,7 +330,7 @@ private fun CalendarViewTypeButton(
 }
 
 @Composable
-private fun DateNavigationHeader(
+private fun ModernDateNavigationHeader(
     currentDate: LocalDate,
     viewType: CalendarViewType,
     settings: Settings,
@@ -263,79 +355,115 @@ private fun DateNavigationHeader(
         CalendarViewType.MONTH -> DateTimeFormatter.ofPattern("MMMM yyyy", Locale("sv"))
     }
     
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.2f),
+        elevation = 4.dp,
+        shape = RoundedCornerShape(16.dp)
     ) {
-        IconButton(
-            onClick = {
-                onDateChanged(when (viewType) {
-                    CalendarViewType.DAY -> currentDate.minusDays(1)
-                    CalendarViewType.WEEK -> currentDate.minusWeeks(1)
-                    CalendarViewType.MONTH -> currentDate.minusMonths(1)
-                })
-            }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.ChevronLeft, contentDescription = "Föregående")
-        }
-        
-        Text(
-            text = currentDate.format(dateFormatter),
-            style = MaterialTheme.typography.h6,
-            fontWeight = FontWeight.Bold
-        )
-        
-        IconButton(
-            onClick = {
-                onDateChanged(when (viewType) {
-                    CalendarViewType.DAY -> currentDate.plusDays(1)
-                    CalendarViewType.WEEK -> currentDate.plusWeeks(1)
-                    CalendarViewType.MONTH -> currentDate.plusMonths(1)
-                })
+            OutlinedButton(
+                onClick = {
+                    onDateChanged(when (viewType) {
+                        CalendarViewType.DAY -> currentDate.minusDays(1)
+                        CalendarViewType.WEEK -> currentDate.minusWeeks(1)
+                        CalendarViewType.MONTH -> currentDate.minusMonths(1)
+                    })
+                },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.size(40.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    Icons.Default.ChevronLeft, 
+                    contentDescription = "Föregående",
+                    modifier = Modifier.size(20.dp)
+                )
             }
-        ) {
-            Icon(Icons.Default.ChevronRight, contentDescription = "Nästa")
+            
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = currentDate.format(dateFormatter),
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.onSurface
+                )
+                if (viewType == CalendarViewType.DAY) {
+                    val dayOfWeek = currentDate.format(DateTimeFormatter.ofPattern("EEEE", Locale("sv")))
+                    Text(
+                        text = dayOfWeek.replaceFirstChar { it.uppercase() },
+                        style = MaterialTheme.typography.caption,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    )
+                }
+            }
+            
+            OutlinedButton(
+                onClick = {
+                    onDateChanged(when (viewType) {
+                        CalendarViewType.DAY -> currentDate.plusDays(1)
+                        CalendarViewType.WEEK -> currentDate.plusWeeks(1)
+                        CalendarViewType.MONTH -> currentDate.plusMonths(1)
+                    })
+                },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.size(40.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    Icons.Default.ChevronRight, 
+                    contentDescription = "Nästa",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun DayView(currentDate: LocalDate, timeEntries: List<TimeEntry>, settings: Settings) {
+private fun ModernDayView(currentDate: LocalDate, timeEntries: List<TimeEntry>) {
     val dayEntries = timeEntries.filter { it.date == currentDate }
     
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         if (dayEntries.isEmpty()) {
             item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = 2.dp
-                ) {
-                    Text(
-                        text = "Inga arbetstider registrerade för denna dag",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                    )
-                }
+                ModernEmptyStateCard(
+                    message = "Inga arbetstider registrerade för denna dag",
+                    icon = Icons.Outlined.EventBusy
+                )
             }
         } else {
             items(dayEntries) { entry ->
-                TimeEntryCard(entry)
+                ModernTimeEntryCard(entry)
             }
         }
     }
 }
 
 @Composable
-private fun WeekView(currentDate: LocalDate, timeEntries: List<TimeEntry>, settings: Settings) {
+private fun ModernWeekView(currentDate: LocalDate, timeEntries: List<TimeEntry>, settings: Settings) {
     val weekFields = if (settings.calendarSettings.weekStartsOnMonday) {
         WeekFields.of(DayOfWeek.MONDAY, 1)
     } else {
@@ -347,18 +475,19 @@ private fun WeekView(currentDate: LocalDate, timeEntries: List<TimeEntry>, setti
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         items(weekDays) { day ->
             val dayEntries = timeEntries.filter { it.date == day }
-            WeekDayCard(day, dayEntries, settings)
+            ModernWeekDayCard(day, dayEntries, settings)
         }
     }
 }
 
 @Composable
-private fun MonthView(currentDate: LocalDate, timeEntries: List<TimeEntry>, settings: Settings) {
+private fun ModernMonthView(currentDate: LocalDate, timeEntries: List<TimeEntry>) {
     val firstDayOfMonth = currentDate.withDayOfMonth(1)
     val lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth())
     val monthEntries = timeEntries.filter { 
@@ -370,24 +499,91 @@ private fun MonthView(currentDate: LocalDate, timeEntries: List<TimeEntry>, sett
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        items(entriesByDate.toList()) { (date, entries) ->
-            MonthDayCard(date, entries)
-        }
-        
         if (entriesByDate.isEmpty()) {
             item {
+                ModernEmptyStateCard(
+                    message = "Inga arbetstider registrerade för denna månad",
+                    icon = Icons.Outlined.EventAvailable
+                )
+            }
+        } else {
+            items(entriesByDate.toList()) { (date, entries) ->
+                ModernMonthDayCard(date, entries)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModernTimeEntryCard(entry: TimeEntry) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+        elevation = 6.dp,
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Schedule,
+                        contentDescription = "Arbetstid",
+                        tint = MaterialTheme.colors.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "${entry.startTime?.toString() ?: "??:??"} - ${entry.endTime?.toString() ?: "??:??"}",
+                        style = MaterialTheme.typography.h6,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onSurface
+                    )
+                }
+                
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    backgroundColor = MaterialTheme.colors.primary,
+                    shape = RoundedCornerShape(12.dp),
                     elevation = 2.dp
                 ) {
                     Text(
-                        text = "Inga arbetstider registrerade för denna månad",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                        text = "${String.format("%.1f", entry.workHours)}h",
+                        style = MaterialTheme.typography.subtitle1,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onPrimary,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+            }
+            
+            if (entry.totalPay > 0) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AttachMoney,
+                        contentDescription = "Lön",
+                        tint = MaterialTheme.colors.secondary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Text(
+                        text = "Bruttolön: ${String.format("%.0f", entry.totalPay)} kr",
+                        style = MaterialTheme.typography.body1,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colors.secondary
                     )
                 }
             }
@@ -396,47 +592,7 @@ private fun MonthView(currentDate: LocalDate, timeEntries: List<TimeEntry>, sett
 }
 
 @Composable
-private fun TimeEntryCard(entry: TimeEntry) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.1f)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "${entry.startTime?.toString() ?: "??:??"} - ${entry.endTime?.toString() ?: "??:??"}",
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${String.format("%.1f", entry.workHours)}h",
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.primary
-                )
-            }
-            
-            // Note field is not available in TimeEntry, can be added later if needed
-            
-            if (entry.totalPay > 0) {
-                Text(
-                    text = "Bruttolön: ${String.format("%.0f", entry.totalPay)} kr",
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.secondary
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun WeekDayCard(date: LocalDate, entries: List<TimeEntry>, settings: Settings) {
+private fun ModernWeekDayCard(date: LocalDate, entries: List<TimeEntry>, settings: Settings) {
     val weekFields = if (settings.calendarSettings.weekStartsOnMonday) {
         WeekFields.of(DayOfWeek.MONDAY, 1)
     } else {
@@ -451,67 +607,24 @@ private fun WeekDayCard(date: LocalDate, entries: List<TimeEntry>, settings: Set
     }
     
     val totalHours = entries.sumOf { it.workHours }
+    val isToday = date == LocalDate.now()
     
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 2.dp,
-        backgroundColor = if (entries.isNotEmpty()) MaterialTheme.colors.primary.copy(alpha = 0.05f) else MaterialTheme.colors.surface
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = date.format(dayFormatter),
-                    style = MaterialTheme.typography.subtitle1,
-                    fontWeight = FontWeight.Bold
-                )
-                
-                if (totalHours > 0) {
-                    Text(
-                        text = "${String.format("%.1f", totalHours)}h",
-                        style = MaterialTheme.typography.subtitle2,
-                        color = MaterialTheme.colors.primary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-            
-            if (entries.isNotEmpty()) {
-                entries.forEach { entry ->
-                    Text(
-                        text = "${entry.startTime?.toString() ?: "??:??"}-${entry.endTime?.toString() ?: "??:??"}",
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-            } else {
-                Text(
-                    text = "Ingen arbetstid",
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.4f),
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MonthDayCard(date: LocalDate, entries: List<TimeEntry>) {
-    val dayFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale("sv"))
-    val totalHours = entries.sumOf { it.workHours }
-    val totalPay = entries.sumOf { it.totalPay }
-    
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.08f)
+        backgroundColor = when {
+            isToday && entries.isNotEmpty() -> MaterialTheme.colors.primary.copy(alpha = 0.15f)
+            isToday -> MaterialTheme.colors.secondary.copy(alpha = 0.1f)
+            entries.isNotEmpty() -> MaterialTheme.colors.surface
+            else -> MaterialTheme.colors.surface.copy(alpha = 0.7f)
+        },
+        elevation = if (isToday) 8.dp else 4.dp,
+        shape = RoundedCornerShape(14.dp),
+        border = if (isToday) {
+            androidx.compose.foundation.BorderStroke(
+                2.dp, 
+                MaterialTheme.colors.primary.copy(alpha = 0.3f)
+            )
+        } else null
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -522,40 +635,78 @@ private fun MonthDayCard(date: LocalDate, entries: List<TimeEntry>) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = date.format(dayFormatter),
-                    style = MaterialTheme.typography.subtitle1,
-                    fontWeight = FontWeight.Bold
-                )
-                
-                Column(horizontalAlignment = Alignment.End) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (isToday) {
+                        Icon(
+                            imageVector = Icons.Filled.Today,
+                            contentDescription = "Idag",
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                     Text(
-                        text = "${String.format("%.1f", totalHours)}h",
-                        style = MaterialTheme.typography.subtitle2,
-                        color = MaterialTheme.colors.primary,
-                        fontWeight = FontWeight.Bold
+                        text = date.format(dayFormatter),
+                        style = MaterialTheme.typography.subtitle1,
+                        fontWeight = if (isToday) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isToday) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
                     )
-                    if (totalPay > 0) {
+                }
+                
+                if (totalHours > 0) {
+                    Card(
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        shape = RoundedCornerShape(10.dp),
+                        elevation = 2.dp
+                    ) {
                         Text(
-                            text = "${String.format("%.0f", totalPay)} kr",
+                            text = "${String.format("%.1f", totalHours)}h",
                             style = MaterialTheme.typography.caption,
-                            color = MaterialTheme.colors.secondary
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.onSecondary,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                         )
                     }
                 }
             }
             
-            entries.forEach { entry ->
+            if (entries.isNotEmpty()) {
+                entries.forEach { entry ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AccessTime,
+                            contentDescription = "Tid",
+                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "${entry.startTime?.toString() ?: "??:??"}-${entry.endTime?.toString() ?: "??:??"}",
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+            } else {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(
-                        text = "${entry.startTime?.toString() ?: "??:??"} - ${entry.endTime?.toString() ?: "??:??"}",
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+                    Icon(
+                        imageVector = Icons.Outlined.EventBusy,
+                        contentDescription = "Ingen arbetstid",
+                        tint = MaterialTheme.colors.onSurface.copy(alpha = 0.4f),
+                        modifier = Modifier.size(16.dp)
                     )
-                    // Note field not available in current TimeEntry structure
+                    Text(
+                        text = "Ingen arbetstid",
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                    )
                 }
             }
         }
@@ -563,7 +714,126 @@ private fun MonthDayCard(date: LocalDate, entries: List<TimeEntry>) {
 }
 
 @Composable
-private fun TimelineMonthView(currentDate: LocalDate, timeEntries: List<TimeEntry>, settings: Settings) {
+private fun ModernMonthDayCard(date: LocalDate, entries: List<TimeEntry>) {
+    val dayFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale("sv"))
+    val totalHours = entries.sumOf { it.workHours }
+    val totalPay = entries.sumOf { it.totalPay }
+    val isToday = date == LocalDate.now()
+    
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = if (isToday) 
+            MaterialTheme.colors.primary.copy(alpha = 0.12f) 
+        else 
+            MaterialTheme.colors.primary.copy(alpha = 0.05f),
+        elevation = if (isToday) 8.dp else 6.dp,
+        shape = RoundedCornerShape(16.dp),
+        border = if (isToday) {
+            androidx.compose.foundation.BorderStroke(
+                2.dp, 
+                MaterialTheme.colors.primary.copy(alpha = 0.4f)
+            )
+        } else null
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (isToday) {
+                        Icon(
+                            imageVector = Icons.Filled.Today,
+                            contentDescription = "Idag",
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Text(
+                        text = date.format(dayFormatter),
+                        style = MaterialTheme.typography.h6,
+                        fontWeight = if (isToday) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isToday) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
+                    )
+                }
+                
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Card(
+                        backgroundColor = MaterialTheme.colors.primary,
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = 2.dp
+                    ) {
+                        Text(
+                            text = "${String.format("%.1f", totalHours)}h",
+                            style = MaterialTheme.typography.subtitle1,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                    
+                    if (totalPay > 0) {
+                        Card(
+                            backgroundColor = MaterialTheme.colors.secondary,
+                            shape = RoundedCornerShape(10.dp),
+                            elevation = 2.dp
+                        ) {
+                            Text(
+                                text = "${String.format("%.0f", totalPay)} kr",
+                                style = MaterialTheme.typography.caption,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colors.onSecondary,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+                }
+            }
+            
+            entries.forEach { entry ->
+                Card(
+                    backgroundColor = MaterialTheme.colors.surface.copy(alpha = 0.8f),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = 2.dp
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Schedule,
+                            contentDescription = "Arbetstid",
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "${entry.startTime?.toString() ?: "??:??"} - ${entry.endTime?.toString() ?: "??:??"}",
+                            style = MaterialTheme.typography.body1,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colors.onSurface
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModernTimelineMonthView(currentDate: LocalDate, timeEntries: List<TimeEntry>) {
     val firstDayOfMonth = currentDate.withDayOfMonth(1)
     val lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth())
     val monthEntries = timeEntries.filter { 
@@ -571,41 +841,29 @@ private fun TimelineMonthView(currentDate: LocalDate, timeEntries: List<TimeEntr
     }
     
     if (monthEntries.isEmpty()) {
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = 2.dp
-                ) {
-                    Text(
-                        text = "Inga arbetstider registrerade för denna månad",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                    )
-                }
-            }
+            ModernEmptyStateCard(
+                message = "Inga arbetstider registrerade för denna månad",
+                icon = Icons.Outlined.Timeline
+            )
         }
         return
     }
     
-    // Create timeline grid
-    TimelineGrid(
-        monthEntries = monthEntries,
-        currentDate = currentDate
+    // Create enhanced timeline grid
+    ModernTimelineGrid(
+        monthEntries = monthEntries
     )
 }
 
 @Composable
-private fun TimelineGrid(
-    monthEntries: List<TimeEntry>,
-    currentDate: LocalDate
+private fun ModernTimelineGrid(
+    monthEntries: List<TimeEntry>
 ) {
     // Group entries by date for easier processing
     val entriesByDate = monthEntries.groupBy { it.date }
@@ -616,69 +874,102 @@ private fun TimelineGrid(
     // Get unique dates in the month with entries
     val datesWithEntries = entriesByDate.keys.sorted()
     
-    LazyColumn(
+    Card(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = 4.dp,
+        shape = RoundedCornerShape(16.dp)
     ) {
-        // Header with dates
-        item {
-            TimelineHeader(datesWithEntries)
-        }
-        
-        // Timeline rows for each hour
-        items(timeSlots) { hour ->
-            TimelineHourRow(
-                hour = hour,
-                datesWithEntries = datesWithEntries,
-                entriesByDate = entriesByDate
-            )
+        LazyColumn(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            // Enhanced header with dates
+            item {
+                ModernTimelineHeader(datesWithEntries)
+            }
+            
+            // Enhanced timeline rows for each hour
+            items(timeSlots) { hour ->
+                ModernTimelineHourRow(
+                    hour = hour,
+                    datesWithEntries = datesWithEntries,
+                    entriesByDate = entriesByDate
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun TimelineHeader(datesWithEntries: List<LocalDate>) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+private fun ModernTimelineHeader(datesWithEntries: List<LocalDate>) {
+    Card(
+        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(12.dp),
+        elevation = 2.dp,
+        modifier = Modifier.padding(bottom = 8.dp)
     ) {
-        // Time column header
-        Box(
-            modifier = Modifier.width(60.dp),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
         ) {
-            Text(
-                text = "Tid",
-                style = MaterialTheme.typography.caption,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        
-        // Date headers
-        datesWithEntries.forEach { date ->
+            // Time column header
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 2.dp),
+                modifier = Modifier.width(60.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Text(
+                    text = "Tid",
+                    style = MaterialTheme.typography.caption,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.primary
+                )
+            }
+            
+            // Date headers
+            datesWithEntries.forEach { date ->
+                val isToday = date == LocalDate.now()
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 2.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = date.format(DateTimeFormatter.ofPattern("EEE", Locale("sv"))),
-                        style = MaterialTheme.typography.caption,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Text(
-                        text = date.dayOfMonth.toString(),
-                        style = MaterialTheme.typography.body2,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Card(
+                        backgroundColor = if (isToday) 
+                            MaterialTheme.colors.primary 
+                        else 
+                            MaterialTheme.colors.surface,
+                        shape = RoundedCornerShape(8.dp),
+                        elevation = if (isToday) 4.dp else 2.dp
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(6.dp)
+                        ) {
+                            Text(
+                                text = date.format(DateTimeFormatter.ofPattern("EEE", Locale("sv"))),
+                                style = MaterialTheme.typography.caption,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isToday) 
+                                    MaterialTheme.colors.onPrimary 
+                                else 
+                                    MaterialTheme.colors.primary
+                            )
+                            Text(
+                                text = date.dayOfMonth.toString(),
+                                style = MaterialTheme.typography.body2,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isToday) 
+                                    MaterialTheme.colors.onPrimary 
+                                else 
+                                    MaterialTheme.colors.onSurface
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -686,7 +977,7 @@ private fun TimelineHeader(datesWithEntries: List<LocalDate>) {
 }
 
 @Composable
-private fun TimelineHourRow(
+private fun ModernTimelineHourRow(
     hour: Int,
     datesWithEntries: List<LocalDate>,
     entriesByDate: Map<LocalDate, List<TimeEntry>>
@@ -694,22 +985,34 @@ private fun TimelineHourRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(40.dp),
+            .height(44.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Time label
-        Box(
-            modifier = Modifier.width(60.dp),
-            contentAlignment = Alignment.Center
+        // Enhanced time label
+        Card(
+            backgroundColor = MaterialTheme.colors.surface.copy(alpha = 0.8f),
+            shape = RoundedCornerShape(8.dp),
+            elevation = 1.dp,
+            modifier = Modifier.width(56.dp)
         ) {
-            Text(
-                text = String.format("%02d:00", hour),
-                style = MaterialTheme.typography.caption,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = String.format("%02d:00", hour),
+                    style = MaterialTheme.typography.caption,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+                )
+            }
         }
         
-        // Timeline blocks for each date
+        Spacer(modifier = Modifier.width(4.dp))
+        
+        // Enhanced timeline blocks for each date
         datesWithEntries.forEach { date ->
             Box(
                 modifier = Modifier
@@ -737,9 +1040,9 @@ private fun TimelineHourRow(
                         Card(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .clip(RoundedCornerShape(2.dp)),
+                                .clip(RoundedCornerShape(6.dp)),
                             backgroundColor = getWorkTimeColor(entryForHour),
-                            elevation = 1.dp
+                            elevation = 3.dp
                         ) {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
@@ -752,22 +1055,22 @@ private fun TimelineHourRow(
                                         style = MaterialTheme.typography.caption,
                                         color = Color.White,
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp
+                                        fontSize = 9.sp
                                     )
                                 }
                             }
                         }
                     }
                 } else {
-                    // Empty time slot
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                color = MaterialTheme.colors.surface.copy(alpha = 0.1f),
-                                shape = RoundedCornerShape(2.dp)
-                            )
-                    )
+                    // Enhanced empty time slot
+                    Card(
+                        modifier = Modifier.fillMaxSize(),
+                        backgroundColor = MaterialTheme.colors.surface.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(6.dp),
+                        elevation = 0.dp
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize())
+                    }
                 }
             }
         }
@@ -775,8 +1078,44 @@ private fun TimelineHourRow(
 }
 
 @Composable
+private fun ModernEmptyStateCard(
+    message: String,
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.surface.copy(alpha = 0.8f),
+        elevation = 2.dp,
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.4f),
+                modifier = Modifier.size(48.dp)
+            )
+            Text(
+                text = message,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
 private fun getWorkTimeColor(entry: TimeEntry): Color {
-    // Different colors for different times of day or work types
+    // Different colors for different times of day or work types using Material 2 colors
     val startHour = entry.startTime?.hour ?: 0
     return when {
         startHour < 8 -> Color(0xFFE91E63) // Early morning - Pink

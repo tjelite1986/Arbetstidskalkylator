@@ -1,0 +1,19 @@
+<lint-module
+    format="1"
+    dir="/home/thomas/Arbetstidskalkylator/TimeReportCalculator/app"
+    name=":app"
+    type="APP"
+    maven="TimeReportCalculator:app:"
+    agpVersion="8.1.4"
+    buildFolder="build"
+    bootClassPath="/home/thomas/android-sdk/platforms/android-34/android.jar:/home/thomas/android-sdk/build-tools/33.0.1/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-34"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

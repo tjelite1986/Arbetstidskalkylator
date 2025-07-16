@@ -76,14 +76,23 @@ fun MainApp() {
                 )
             }
             
-            composable(NavigationItem.Templates.route) {
-                currentDestination = NavigationItem.Templates
-                TemplatesScreen()
+            composable(NavigationItem.WeeklySchedule.route) {
+                currentDestination = NavigationItem.WeeklySchedule
+                WeeklyScheduleScreen()
             }
             
             composable(NavigationItem.Export.route) {
                 currentDestination = NavigationItem.Export
-                ExportScreen()
+                ExportScreen(
+                    timeEntries = sharedTimeEntries,
+                    settings = sharedSettings,
+                    onTimeEntriesChanged = { timeEntries ->
+                        sharedTimeEntries = timeEntries
+                    },
+                    onSettingsChanged = { settings ->
+                        sharedSettings = settings
+                    }
+                )
             }
             
             composable(NavigationItem.Settings.route) {

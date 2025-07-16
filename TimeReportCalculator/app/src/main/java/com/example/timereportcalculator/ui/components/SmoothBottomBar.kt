@@ -6,18 +6,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,78 +34,35 @@ fun SmoothBottomBar(
     selectedItem: NavigationItem,
     onItemSelected: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
-    barHeight: Dp = 70.dp,
+    barHeight: Dp = 72.dp,
     backgroundColor: Color = MaterialTheme.colors.surface,
-    indicatorColor: Color = MaterialTheme.colors.primary,
-    selectedContentColor: Color = MaterialTheme.colors.onPrimary,
+    selectedContentColor: Color = MaterialTheme.colors.primary,
     unselectedContentColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
 ) {
-    Card(
+    // Clean and professional surface
+    Surface(
         modifier = modifier
             .fillMaxWidth()
             .height(barHeight),
         elevation = 8.dp,
-        backgroundColor = backgroundColor,
+        color = backgroundColor,
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Background indicator
-            val selectedIndex = items.indexOf(selectedItem)
-            val density = LocalDensity.current
-            
-            val indicatorOffset by animateDpAsState(
-                targetValue = with(density) {
-                    // SpaceEvenly calculation: each item gets equal space
-                    val screenWidthPx = LocalContext.current.resources.displayMetrics.widthPixels  
-                    val screenWidthDp = (screenWidthPx / density.density).dp
-                    val totalPadding = 16.dp // Row padding
-                    val availableWidth = screenWidthDp - totalPadding
-                    
-                    // With SpaceEvenly, each item gets availableWidth / items.size space
-                    val itemSpace = availableWidth.value / items.size
-                    val indicatorWidth = 60f
-                    
-                    // Center of each item space
-                    val itemCenterX = (selectedIndex * itemSpace) + (itemSpace / 2)
-                    val indicatorStartX = itemCenterX - (indicatorWidth / 2)
-                    
-                    // Add back the left padding offset
-                    (indicatorStartX + 8).dp // 8dp is left padding
-                },
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items.forEach { item ->
+                SmoothBottomBarItem(
+                    item = item,
+                    isSelected = item == selectedItem,
+                    onClick = { onItemSelected(item) },
+                    selectedContentColor = selectedContentColor,
+                    unselectedContentColor = unselectedContentColor
                 )
-            )
-            
-            // Animated indicator background
-            Box(
-                modifier = Modifier
-                    .offset(x = indicatorOffset)
-                    .size(width = 60.dp, height = barHeight)
-                    .padding(horizontal = 8.dp, vertical = 6.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(indicatorColor)
-                    .align(Alignment.CenterStart)
-            )
-            
-            // Navigation items
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                items.forEach { item ->
-                    SmoothBottomBarItem(
-                        item = item,
-                        isSelected = item == selectedItem,
-                        onClick = { onItemSelected(item) },
-                        selectedContentColor = selectedContentColor,
-                        unselectedContentColor = unselectedContentColor
-                    )
-                }
             }
         }
     }
@@ -114,67 +76,74 @@ private fun SmoothBottomBarItem(
     selectedContentColor: Color,
     unselectedContentColor: Color
 ) {
-    val animatedColor by animateColorAsState(
+    // Simple and clean color animation
+    val animatedIconColor by animateColorAsState(
         targetValue = if (isSelected) selectedContentColor else unselectedContentColor,
-        animationSpec = tween(300)
+        animationSpec = tween(200)
     )
     
-    val animatedScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.1f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
+    val animatedTextColor by animateColorAsState(
+        targetValue = if (isSelected) selectedContentColor else unselectedContentColor,
+        animationSpec = tween(200)
     )
     
-    val animatedWeight by animateFloatAsState(
-        targetValue = if (isSelected) FontWeight.Bold.weight.toFloat() else FontWeight.Normal.weight.toFloat(),
-        animationSpec = tween(300)
+    // Natural background indicator
+    val animatedBackgroundAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 0.12f else 0f,
+        animationSpec = tween(200)
     )
     
-    Box(
+    // Clean clickable item with natural indicator
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .size(64.dp)
+            .width(56.dp)
+            .height(56.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                selectedContentColor.copy(alpha = animatedBackgroundAlpha)
+            )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.title,
-                tint = animatedColor,
-                modifier = Modifier
-                    .size(24.dp)
-                    .scale(animatedScale)
-            )
-            
-            if (isSelected) {
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = item.title,
-                    color = animatedColor,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight(animatedWeight.toInt()),
-                    maxLines = 1
+                indication = rememberRipple(
+                    bounded = true,
+                    radius = 28.dp,
+                    color = selectedContentColor.copy(alpha = 0.2f)
                 )
-            }
-        }
+            ) { onClick() }
+            .padding(8.dp)
+    ) {
+        // Clean icon display
+        Icon(
+            imageVector = if (isSelected) item.selectedIcon else item.icon,
+            contentDescription = item.title,
+            tint = animatedIconColor,
+            modifier = Modifier.size(24.dp)
+        )
+        
+        // Always show label but animate its appearance
+        Spacer(modifier = Modifier.height(2.dp))
+        
+        Text(
+            text = item.title,
+            color = animatedTextColor,
+            fontSize = 10.sp,
+            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+            maxLines = 1,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
-// Preview version for easier testing
+// Enhanced preview with better demo
 @Composable
 fun SmoothBottomBarPreview() {
     val items = listOf(
+        NavigationItem.Home,
         NavigationItem.TimeReport,
         NavigationItem.Statistics, 
-        NavigationItem.Templates,
+        NavigationItem.WeeklySchedule,
         NavigationItem.Export,
         NavigationItem.Settings
     )
@@ -182,10 +151,21 @@ fun SmoothBottomBarPreview() {
     var selectedItem by remember { mutableStateOf(items[0]) }
     
     MaterialTheme {
-        SmoothBottomBar(
-            items = items,
-            selectedItem = selectedItem,
-            onItemSelected = { selectedItem = it }
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
+            // Spacer to push bottom bar to bottom
+            Spacer(modifier = Modifier.weight(1f))
+            
+            // Enhanced bottom bar with improved styling
+            SmoothBottomBar(
+                items = items,
+                selectedItem = selectedItem,
+                onItemSelected = { selectedItem = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }

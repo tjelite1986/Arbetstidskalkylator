@@ -60,7 +60,7 @@ class FileManager(private val context: Context) {
             context.contentResolver.openOutputStream(destinationUri)?.use { outputStream ->
                 outputStream.bufferedWriter().use { writer ->
                     // CSV Header
-                    writer.append("Datum,Veckodag,Starttid,Sluttid,Rast(min),Arbetstid(h),Grundlön,OB-tillägg,Totalt,Skatt,Netto,Röd dag,Sjukdag\n")
+                    writer.append("Datum,Veckodag,Starttid,Sluttid,Rast(min),Arbetstid(h),Grundlön,OB-tillägg,Bruttolön,Semesterersättning,Totalt,Skatt,Netto,Röd dag,Sjukdag\n")
                     
                     entries.forEach { entry ->
                         val dayOfWeek = when (entry.date.dayOfWeek.value) {
@@ -82,6 +82,8 @@ class FileManager(private val context: Context) {
                         writer.append("${String.format("%.2f", entry.workHours)},")
                         writer.append("${String.format("%.2f", entry.basePay)},")
                         writer.append("${String.format("%.2f", entry.obPay)},")
+                        writer.append("${String.format("%.2f", entry.grossPay)},")
+                        writer.append("${String.format("%.2f", entry.vacationPay)},")
                         writer.append("${String.format("%.2f", entry.totalPay)},")
                         writer.append("${String.format("%.2f", entry.taxAmount)},")
                         writer.append("${String.format("%.2f", entry.netPay)},")
@@ -102,7 +104,7 @@ class FileManager(private val context: Context) {
             context.contentResolver.openOutputStream(destinationUri)?.use { outputStream ->
                 outputStream.bufferedWriter().use { writer ->
                     // Tab-separated header
-                    writer.append("Datum\tVeckodag\tStarttid\tSluttid\tRast(min)\tArbetstid(h)\tGrundlön\tOB-tillägg\tTotalt\tSkatt\tNetto\tRöd dag\tSjukdag\n")
+                    writer.append("Datum\tVeckodag\tStarttid\tSluttid\tRast(min)\tArbetstid(h)\tGrundlön\tOB-tillägg\tBruttolön\tSemesterersättning\tTotalt\tSkatt\tNetto\tRöd dag\tSjukdag\n")
                     
                     entries.forEach { entry ->
                         val dayOfWeek = when (entry.date.dayOfWeek.value) {
@@ -124,6 +126,8 @@ class FileManager(private val context: Context) {
                         writer.append("${String.format("%.2f", entry.workHours)}\t")
                         writer.append("${String.format("%.2f", entry.basePay)}\t")
                         writer.append("${String.format("%.2f", entry.obPay)}\t")
+                        writer.append("${String.format("%.2f", entry.grossPay)}\t")
+                        writer.append("${String.format("%.2f", entry.vacationPay)}\t")
                         writer.append("${String.format("%.2f", entry.totalPay)}\t")
                         writer.append("${String.format("%.2f", entry.taxAmount)}\t")
                         writer.append("${String.format("%.2f", entry.netPay)}\t")
