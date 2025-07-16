@@ -11,14 +11,44 @@
 
 En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjälpa detaljhandelsanställda att beräkna arbetstid, OB-ersättningar och löner enligt **Detaljhandelsavtalet 2025-2026**.
 
+## 📱 Appöversikt
+
+<div align="center">
+
+![Startsida](exempel/Screenshot_20250716_231538_Tidrapport%20Kalkylator.png)
+*Välkomstsida med appöversikt och funktionsbeskrivning*
+
+![Tidrapport](exempel/Screenshot_20250716_231551_Tidrapport%20Kalkylator.png)
+*Tidrapport med periodsammanfattning och totaler*
+
+![Kalendervy](exempel/Screenshot_20250716_231647_Tidrapport%20Kalkylator.png)
+*Interaktiv kalendervy med klickbara dagar, veckonummer och månadsnavigering*
+
+![Daginfo popup](exempel/Screenshot_20250716_231657_Tidrapport%20Kalkylator.png)
+*Popup med detaljerad dagsinformation och redigeringsmöjligheter*
+
+![Lägg till dag](exempel/Screenshot_20250716_231605_Tidrapport%20Kalkylator.png)
+*Fullständig dialog för att lägga till arbetsdagar med alla inställningar*
+
+![Export funktioner](exempel/Screenshot_20250716_231712_Tidrapport%20Kalkylator.png)
+*Export och backup-funktioner för datasäkerhet*
+
+![Avancerade inställningar](exempel/Screenshot_20250716_231723_Tidrapport%20Kalkylator.png)
+*Avancerade inställningar med alla anpassningsmöjligheter*
+
+![Lönenivåer](exempel/Screenshot_20250716_231738_Tidrapport%20Kalkylator.png)
+*Detaljhandelsavtalets lönenivåer och avtalsinställningar*
+
+</div>
+
 ## ✨ Funktioner
 
 ### 🕐 **Tidsrapportering**
-- **📅 Förbättrad AddDayDialog** - Fullskärms popup med klickbara tidsväljare
+- **📅 Interaktiv kalendervy** - Klicka på vilken dag som helst för att se information
 - **⏰ Intelligent tidsregistrering** med start- och sluttider
 - **🍽️ Smarta rastinställningar** - både klickbara tider och direktinmatning
 - **⏱️ Klickbara tidsväljare** för alla tidsfält med intuitivt gränssnitt
-- **📅 Kalenderväljare** för enkelt datumval
+- **📅 Kalenderväljare** för enkelt datumval med månadsnavigering
 - **✅ Smart validering** av tider och arbetstimmar med svenska felmeddelanden
 - **📊 Periodfiltrering** för vecka, månad eller anpassad period
 
@@ -45,6 +75,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 ### 🎨 **Modern Design**
 - **🎨 Material Design 3** med intuitivt användargränssnitt
+- **📅 Förbättrad kalendervy** med veckonummer och elegant layout
 - **🌙 Mörkt/ljust tema** för optimal synlighet
 - **📱 Responsiv design** som fungerar på alla skärmstorlekar
 - **♿ Tillgänglighet** med stöd för skärmläsare
@@ -60,7 +91,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 #### 📦 **GitHub Releases (Rekommenderat)**
 1. Gå till [🚀 Releases](https://github.com/tjelite1986/Arbetstidskalkylator/releases/latest)
-2. Ladda ner senaste **APK-fil** (v1.1.82-beta)
+2. Ladda ner senaste **APK-fil** (v1.1.127)
 3. Öppna APK-filen på din Android-enhet
 4. Följ installationsinstruktionerna
 5. Öppna appen och börja registrera arbetstid!
@@ -78,15 +109,15 @@ cd Arbetstidskalkylator
 ## 📖 Snabbstart
 
 ### 🆕 **Lägg till din första arbetsdag**
-1. **Tryck på ➕-knappen** - Förbättrad AddDayDialog öppnas
-2. **📅 Välj datum** med kalenderväljare och navigeringsknappar (←/→)
+1. **📅 Klicka på kalendern** - Välj datum direkt i kalendervy
+2. **➕ Tryck "Lägg till ny dag"** - Datum fylls automatiskt i
 3. **⏰ Ange arbetstider** med klickbara tidsväljare eller direktinmatning
 4. **🍽️ Konfigurera raster** med förbättrade inställningar:
    - **Automatisk**: Systemet beräknar raster baserat på arbetstid
    - **Manuell**: Klickbara tider eller direktinmatning av rastminuter
 5. **🛠️ Använd mall** - Knappen är nu placerad överst för enkel åtkomst
 6. **📝 Lägg till beskrivning** (valfritt) - "Lagerarbete", "Kundtjänst" etc.
-7. **✅ Tryck "Lägg till"** - Dagen sparas i listan
+7. **✅ Tryck "Lägg till"** - Dagen sparas och visas på kalendern
 
 ### ⚡ **Snabbberäkning**
 1. **📋 Fyll i alla arbetsdagar** för perioden
@@ -227,15 +258,26 @@ Detta projekt är licensierat under **MIT License** - se [LICENSE](LICENSE) file
 
 ## 🏆 Versionshistorik
 
-### 🚀 **v1.1.82-beta** (Senaste)
-- **🎯 Förbättrade rastinställningar** och förbättrad layout i AddDayDialog
-- **🔼 Flyttad 'Använd mall' knapp** till toppen för bättre användbarhet
-- **⏰ Klickbara tidsväljare** för alla tidsfält med intuitivt gränssnitt
-- **🍽️ Avancerad rastinmatning** med både klickbara tider och direktinmatning
-- **📅 Kalenderväljare** för enkelt datumval
-- **✨ Förbättrat användarupplevelse** i hela AddDayDialog
+### 🚀 **v1.1.127** (Senaste)
+- **📅 Fullständigt omdesignad kalendervy** - Modern design som matchar önskemål
+- **🔧 Interaktiv funktionalitet** - Klicka på vilken dag som helst för information
+- **✨ Lägg till/redigera arbetsdagar** direkt från kalendern
+- **🎯 Automatisk datumfyllning** - Valt datum fylls automatiskt i
+- **🎨 Smal och elegant design** - Förbättrad användarupplevelse
+- **📊 Månadsnavigering** med vänster/höger pilar
+- **🟢 Dagens datum** markerat med röd cirkel
+- **📝 Popup-information** med detaljerad dagsinformation
+- **⚡ Förbättrad prestanda** i kalenderrendering
 
 ### 📋 **Tidigare versioner**
+**v1.1.82-beta**:
+- 🎯 Förbättrade rastinställningar och förbättrad layout i AddDayDialog
+- 🔼 Flyttad 'Använd mall' knapp till toppen för bättre användbarhet
+- ⏰ Klickbara tidsväljare för alla tidsfält med intuitivt gränssnitt
+- 🍽️ Avancerad rastinmatning med både klickbara tider och direktinmatning
+- 📅 Kalenderväljare för enkelt datumval
+- ✨ Förbättrat användarupplevelse i hela AddDayDialog
+
 **v1.1.71-beta**:
 - 🎯 Förbättrade rastinställningar och förbättrad layout i AddDayDialog
 - 🔼 Flyttad 'Använd mall' knapp till toppen för bättre användbarhet
