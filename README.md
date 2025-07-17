@@ -15,11 +15,18 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 <div align="center">
 
+### 🏠 Huvudfunktioner
+
 ![Startsida](exempel/Screenshot_20250716_231538_Tidrapport%20Kalkylator.png)
 *Välkomstsida med appöversikt och funktionsbeskrivning*
 
 ![Tidrapport](exempel/Screenshot_20250716_231551_Tidrapport%20Kalkylator.png)
 *Tidrapport med periodsammanfattning och totaler*
+
+![Statistik](exempel/Screenshot_20250716_231622_Tidrapport%20Kalkylator.png)
+*Statistikvy med detaljerade löneberäkningar och OB-tillägg*
+
+### 📅 Kalender & Tidsregistrering
 
 ![Kalendervy](exempel/Screenshot_20250716_231647_Tidrapport%20Kalkylator.png)
 *Interaktiv kalendervy med klickbara dagar, veckonummer och månadsnavigering*
@@ -30,14 +37,38 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 ![Lägg till dag](exempel/Screenshot_20250716_231605_Tidrapport%20Kalkylator.png)
 *Fullständig dialog för att lägga till arbetsdagar med alla inställningar*
 
+![Tidsinställningar](exempel/Screenshot_20250716_231638_Tidrapport%20Kalkylator.png)
+*Avancerade tidsinställningar och rasthantering*
+
+### 💾 Export & Backup
+
 ![Export funktioner](exempel/Screenshot_20250716_231712_Tidrapport%20Kalkylator.png)
 *Export och backup-funktioner för datasäkerhet*
+
+![Backup inställningar](exempel/Screenshot_20250716_231705_Tidrapport%20Kalkylator.png)
+*Google Drive backup och synkroniseringsinställningar*
+
+### ⚙️ Inställningar & Konfiguration
 
 ![Avancerade inställningar](exempel/Screenshot_20250716_231723_Tidrapport%20Kalkylator.png)
 *Avancerade inställningar med alla anpassningsmöjligheter*
 
 ![Lönenivåer](exempel/Screenshot_20250716_231738_Tidrapport%20Kalkylator.png)
 *Detaljhandelsavtalets lönenivåer och avtalsinställningar*
+
+![OB-inställningar](exempel/Screenshot_20250716_231744_Tidrapport%20Kalkylator.png)
+*OB-satser för butik och lager enligt kollektivavtalet*
+
+### 📊 Mallar & Scheman
+
+![Arbetsmallar](exempel/Screenshot_20250716_231801_Tidrapport%20Kalkylator.png)
+*Arbetsmallar för snabb registrering av återkommande arbetspass*
+
+![Veckoschema](exempel/Screenshot_20250716_231812_Tidrapport%20Kalkylator.png)
+*Veckoschema för planering av arbetstider*
+
+![Schema inställningar](exempel/Screenshot_20250716_231827_Tidrapport%20Kalkylator.png)
+*Detaljerade schema- och mallinställningar*
 
 </div>
 
