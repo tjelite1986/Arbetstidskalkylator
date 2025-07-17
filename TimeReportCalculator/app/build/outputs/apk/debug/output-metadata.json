@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.example.timereportcalculator.debug",
+  "variantName": "debug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 121,
+      "versionName": "1.1.121-debug",
+      "outputFile": "Tidsregistrerings-Kalkylator-1.1.121-debug-beta.apk"
+    }
+  ],
+  "elementType": "File"
+}

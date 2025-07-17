@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen() {
-    val uriHandler = LocalUriHandler.current
     
     LazyColumn(
         modifier = Modifier

@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
@@ -125,8 +127,8 @@ private fun ModernMonthViewTypeSelector(
                 viewType = MonthViewType.LIST,
                 currentViewType = currentMonthViewType,
                 onViewTypeChanged = onMonthViewTypeChanged,
-                icon = Icons.Default.List,
-                selectedIcon = Icons.Filled.List,
+                icon = Icons.AutoMirrored.Outlined.List,
+                selectedIcon = Icons.AutoMirrored.Filled.List,
                 text = "Lista",
                 modifier = Modifier.weight(1f)
             )

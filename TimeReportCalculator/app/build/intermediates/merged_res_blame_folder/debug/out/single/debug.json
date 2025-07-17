@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.example.timereportcalculator.app-merged_res-66:/xml_backup_rules.xml.flat",
+        "source": "com.example.timereportcalculator.app-main-68:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.timereportcalculator.app-merged_res-66:/xml_file_paths.xml.flat",
+        "source": "com.example.timereportcalculator.app-main-68:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.example.timereportcalculator.app-merged_res-66:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.timereportcalculator.app-main-68:/xml/data_extraction_rules.xml"
+    }
+]

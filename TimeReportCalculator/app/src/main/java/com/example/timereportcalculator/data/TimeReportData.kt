@@ -1,7 +1,6 @@
 package com.example.timereportcalculator.data
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
 import java.time.LocalTime
 
