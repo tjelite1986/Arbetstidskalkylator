@@ -23,7 +23,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 ![Tidrapport](https://raw.githubusercontent.com/tjelite1986/Arbetstidskalkylator/main/exempel/Screenshot_20250716_231551_Tidrapport%20Kalkylator.png)
 *Tidrapport med periodsammanfattning och totaler*
 
-![Statistik](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231622_Tidrapport%20Kalkylator.png)
+![Statistik](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231622_TidrapportKalkylator.png)
 *Statistikvy med detaljerade löneberäkningar och OB-tillägg*
 
 ### 📅 Kalender & Tidsregistrering
