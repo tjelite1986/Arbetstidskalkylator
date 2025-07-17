@@ -28,7 +28,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 ### 📅 Kalender & Tidsregistrering
 
-![Kalendervy](https://raw.githubusercontent.com/tjelite1986/Arbetstidskalkylator/main/exempel/Screenshot_20250716_231647_Tidrapport%20Kalkylator.png)
+![Kalendervy](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231538_Tidrapport_Kalkylator.png
 *Interaktiv kalendervy med klickbara dagar, veckonummer och månadsnavigering*
 
 ![Daginfo popup](https://raw.githubusercontent.com/tjelite1986/Arbetstidskalkylator/main/exempel/Screenshot_20250716_231657_Tidrapport%20Kalkylator.png)
