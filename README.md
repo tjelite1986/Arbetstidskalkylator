@@ -17,57 +17,57 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 ### 🏠 Huvudfunktioner
 
-![Startsida](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231538_Tidrapport_Kalkylator.png)
+![Startsida](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231538_Tidrapport_Kalkylator.png)
 *Välkomstsida med appöversikt och funktionsbeskrivning*
 
-![Tidrapport](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231551_Tidrapport_Kalkylator.png)
+![Tidrapport](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231551_Tidrapport_Kalkylator.png)
 *Tidrapport med periodsammanfattning och totaler*
 
-![Statistik](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231622_Tidrapport_Kalkylator.png)
+![Statistik](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231622_Tidrapport_Kalkylator.png)
 *Statistikvy med detaljerade löneberäkningar och OB-tillägg*
 
 ### 📅 Kalender & Tidsregistrering
 
-![Kalendervy](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231647_Tidrapport_Kalkylator.png)
+![Kalendervy](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231647_Tidrapport_Kalkylator.png)
 *Interaktiv kalendervy med klickbara dagar, veckonummer och månadsnavigering*
 
-![Daginfo popup](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231657_Tidrapport_Kalkylator.png)
+![Daginfo popup](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231657_Tidrapport_Kalkylator.png)
 *Popup med detaljerad dagsinformation och redigeringsmöjligheter*
 
-![Lägg till dag](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231605_Tidrapport_Kalkylator.png)
+![Lägg till dag](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231605_Tidrapport_Kalkylator.png)
 *Fullständig dialog för att lägga till arbetsdagar med alla inställningar*
 
-![Tidsinställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231638_Tidrapport_Kalkylator.png)
+![Tidsinställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231638_Tidrapport_Kalkylator.png)
 *Avancerade tidsinställningar och rasthantering*
 
 ### 💾 Export & Backup
 
-![Export funktioner](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231712_Tidrapport_Kalkylator.png)
+![Export funktioner](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231712_Tidrapport_Kalkylator.png)
 *Export och backup-funktioner för datasäkerhet*
 
-![Backup inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231705_Tidrapport_Kalkylator.png)
+![Backup inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231705_Tidrapport_Kalkylator.png)
 *Google Drive backup och synkroniseringsinställningar*
 
 ### ⚙️ Inställningar & Konfiguration
 
-![Avancerade inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231723_Tidrapport_Kalkylator.png)
+![Avancerade inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231723_Tidrapport_Kalkylator.png)
 *Avancerade inställningar med alla anpassningsmöjligheter*
 
-![Lönenivåer](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231738_Tidrapport_Kalkylator.png)
+![Lönenivåer](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231738_Tidrapport_Kalkylator.png)
 *Detaljhandelsavtalets lönenivåer och avtalsinställningar*
 
-![OB-inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231744_Tidrapport_Kalkylator.png)
+![OB-inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231744_Tidrapport_Kalkylator.png)
 *OB-satser för butik och lager enligt kollektivavtalet*
 
 ### 📊 Mallar & Scheman
 
-![Arbetsmallar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231801_Tidrapport_Kalkylator.png)
+![Arbetsmallar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231801_Tidrapport_Kalkylator.png)
 *Arbetsmallar för snabb registrering av återkommande arbetspass*
 
-![Veckoschema](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231812_Tidrapport_Kalkylator.png)
+![Veckoschema](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231812_Tidrapport_Kalkylator.png)
 *Veckoschema för planering av arbetstider*
 
-![Schema inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231827_Tidrapport_Kalkylator.png)
+![Schema inställningar](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231827_Tidrapport_Kalkylator.png)
 *Detaljerade schema- och mallinställningar*
 
 </div>
