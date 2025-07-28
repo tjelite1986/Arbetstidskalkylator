@@ -17,7 +17,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 
 ### 🏠 Huvudfunktioner
 
-![Startsida](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231538_Tidrapport_Kalkylator.png)
+![Startsida](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/exempel/Screenshot_20250716_231538_Tidrapport_Kalkylator.png)
 *Välkomstsida med appöversikt och funktionsbeskrivning*
 
 ![Tidrapport](https://github.com/tjelite1986/Arbetstidskalkylator/blob/main/assets/screenshots/Screenshot_20250716_231551_Tidrapport_Kalkylator.png)
