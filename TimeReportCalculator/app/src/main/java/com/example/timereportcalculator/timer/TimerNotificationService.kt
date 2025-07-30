@@ -64,7 +64,7 @@ class TimerNotificationService : Service() {
                 android.util.Log.d("TimerService", "Service started for timer")
             }
             ACTION_STOP_TIMER -> {
-                workSessionManager.stopWorkSession()
+                workSessionManager.stopWorkSession(sharedSettings)
                 android.util.Log.d("TimerService", "Timer stopped via notification")
                 stopSelf()
             }

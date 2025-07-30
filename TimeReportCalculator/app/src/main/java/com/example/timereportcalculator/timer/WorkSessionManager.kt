@@ -49,11 +49,11 @@ class WorkSessionManager private constructor() {
         }
     }
     
-    fun stopWorkSession(): TimeEntry? {
+    fun stopWorkSession(settings: Settings? = null): TimeEntry? {
         val session = _currentSession.value ?: return null
         
         // Convert active session to TimeEntry for permanent storage
-        val timeEntry = convertSessionToTimeEntry(session)
+        val timeEntry = convertSessionToTimeEntry(session, settings)
         
         _currentSession.value = null
         _timerState.value = TimerState.STOPPED
@@ -154,8 +154,8 @@ class WorkSessionManager private constructor() {
         }
     }
     
-    private fun convertSessionToTimeEntry(session: ActiveWorkSession): TimeEntry {
-        return TimeEntry(
+    private fun convertSessionToTimeEntry(session: ActiveWorkSession, settings: Settings? = null): TimeEntry {
+        val baseEntry = TimeEntry(
             date = session.date,
             startTime = session.startTime.toLocalTime(),
             endTime = session.currentTime.toLocalTime(),
@@ -163,6 +163,18 @@ class WorkSessionManager private constructor() {
             workHours = session.getWorkHours(),
             isFromLiveTimer = true // Markera som Live Timer-skapad
         )
+        
+        // Calculate wages if settings are available
+        return if (settings != null) {
+            try {
+                payCalculator.calculatePay(baseEntry, settings)
+            } catch (e: Exception) {
+                android.util.Log.e("WorkSessionManager", "Error calculating pay for converted entry", e)
+                baseEntry // Return entry without calculations if calculation fails
+            }
+        } else {
+            baseEntry // Return entry without calculations if no settings
+        }
     }
     
     private fun getCurrentOBRate(session: ActiveWorkSession, settings: Settings): Double {
