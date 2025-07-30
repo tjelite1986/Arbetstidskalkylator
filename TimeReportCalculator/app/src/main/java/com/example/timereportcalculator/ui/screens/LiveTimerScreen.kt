@@ -27,7 +27,8 @@ fun LiveTimerScreen(
     settings: Settings = Settings(),
     sessionManager: WorkSessionManager = WorkSessionManager.getInstance(),
     onTimeEntriesChanged: (List<TimeEntry>) -> Unit = {},
-    onSettingsChanged: (Settings) -> Unit = {}
+    onSettingsChanged: (Settings) -> Unit = {},
+    onNavigateToTimeReport: () -> Unit = {}
 ) {
     val context = LocalContext.current
     
@@ -113,7 +114,7 @@ fun LiveTimerScreen(
             // Quick Actions
             QuickActionsCard(
                 onAddManualEntry = { showAddDayDialog = true },
-                onViewHistory = { /* Navigate to time report */ }
+                onViewHistory = { onNavigateToTimeReport() }
             )
         }
         
@@ -121,7 +122,7 @@ fun LiveTimerScreen(
             // Recent entries preview
             if (timeEntries.isNotEmpty()) {
                 RecentEntriesCard(
-                    entries = timeEntries.takeLast(3),
+                    entries = timeEntries.sortedByDescending { it.date }.take(3),
                     onEntryClick = { entry ->
                         selectedEntry = entry
                         showAddDayDialog = true
