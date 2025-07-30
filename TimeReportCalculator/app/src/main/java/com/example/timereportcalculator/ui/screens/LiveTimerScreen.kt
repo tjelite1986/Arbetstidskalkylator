@@ -96,12 +96,8 @@ fun LiveTimerScreen(
                     }
                 },
                 onStopShift = {
-                    val completedEntry = sessionManager.stopWorkSession(settings)
-                    completedEntry?.let { entry ->
-                        // Add the completed entry and sort by date
-                        val updatedEntries = (timeEntries + entry).sortedByDescending { it.date }
-                        onTimeEntriesChanged(updatedEntries)
-                    }
+                    sessionManager.stopWorkSession(settings)
+                    // Note: Completed entry is automatically added to sharedTimeEntries via MainApp
                     stopTimerService(context)
                 },
                 onStartBreak = {

@@ -51,6 +51,16 @@ fun MainApp() {
         }
     }
     
+    // Listen for completed Live Timer sessions
+    LaunchedEffect(Unit) {
+        sharedSessionManager.completedSessions.collect { completedEntry ->
+            if (completedEntry != null) {
+                // Add completed session to shared entries
+                sharedTimeEntries = (sharedTimeEntries + completedEntry).sortedByDescending { it.date }
+            }
+        }
+    }
+    
     // Auto-save data whenever it changes
     LaunchedEffect(sharedTimeEntries, sharedSettings) {
         if (!isLoading && (sharedTimeEntries.isNotEmpty() || sharedSettings != com.example.timereportcalculator.data.Settings())) {

@@ -27,6 +27,10 @@ class WorkSessionManager private constructor() {
     private val _timerState = MutableStateFlow(TimerState.STOPPED)
     val timerState: StateFlow<TimerState> = _timerState.asStateFlow()
     
+    // Flow for completed sessions
+    private val _completedSessions = MutableStateFlow<TimeEntry?>(null)
+    val completedSessions: StateFlow<TimeEntry?> = _completedSessions.asStateFlow()
+    
     private val payCalculator = PayCalculator()
     
     fun startWorkSession(
@@ -57,6 +61,9 @@ class WorkSessionManager private constructor() {
         
         _currentSession.value = null
         _timerState.value = TimerState.STOPPED
+        
+        // Emit the completed session so other parts of the app can react
+        _completedSessions.value = timeEntry
         
         return timeEntry
     }
