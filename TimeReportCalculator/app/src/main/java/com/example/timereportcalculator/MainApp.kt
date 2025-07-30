@@ -127,16 +127,6 @@ fun MainApp() {
                     },
                     onSettingsChanged = { settings ->
                         sharedSettings = settings
-                    },
-                    onNavigateToTimeReport = {
-                        currentDestination = NavigationItem.TimeReport
-                        navController.navigate(NavigationItem.TimeReport.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
                     }
                 )
             }

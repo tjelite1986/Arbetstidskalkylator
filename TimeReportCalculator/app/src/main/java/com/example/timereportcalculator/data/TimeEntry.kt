@@ -23,7 +23,8 @@ data class TimeEntry(
     val totalPay: Double = 0.0, // Total med semesterersättning
     val taxAmount: Double = 0.0,
     val netPay: Double = 0.0,
-    val obBreakdown: Map<String, Double> = emptyMap()
+    val obBreakdown: Map<String, Double> = emptyMap(),
+    val isFromLiveTimer: Boolean = false // Flagga för Live Timer-skapade poster
 )
 
 data class Settings(
@@ -35,7 +36,8 @@ data class Settings(
     val workTimeSettings: WorkTimeSettings = WorkTimeSettings(),
     val calendarSettings: CalendarSettings = CalendarSettings(),
     val customHolidays: List<Holiday> = emptyList(),
-    val automaticHolidayDetection: Boolean = true
+    val automaticHolidayDetection: Boolean = true,
+    val timerSettings: TimerSettings = TimerSettings()
 )
 
 data class OBRates(
@@ -82,3 +84,11 @@ enum class ContractLevel(
     EXPERIENCE_3_PLUS_YEARS("3+ års erfarenhet", 165.84, "Minimilön efter 3+ års branschexperience"),
     CUSTOM("Anpassad", 162.98, "Anpassad lönenivå")
 }
+
+data class TimerSettings(
+    val autoBreakReminderMinutes: Int = 120, // 2 hours
+    val maxWorkHoursWithoutBreak: Double = 6.0,
+    val enableBreakReminders: Boolean = true,
+    val enableShiftEndReminders: Boolean = true,
+    val notificationSound: Boolean = true
+)

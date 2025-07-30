@@ -160,7 +160,8 @@ class WorkSessionManager private constructor() {
             startTime = session.startTime.toLocalTime(),
             endTime = session.currentTime.toLocalTime(),
             breakMinutes = session.getTotalBreakMinutes(),
-            workHours = session.getWorkHours()
+            workHours = session.getWorkHours(),
+            isFromLiveTimer = true // Markera som Live Timer-skapad
         )
     }
     

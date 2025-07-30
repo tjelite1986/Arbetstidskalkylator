@@ -3,8 +3,11 @@ package com.example.timereportcalculator.ui.screens
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -27,13 +30,13 @@ fun LiveTimerScreen(
     settings: Settings = Settings(),
     sessionManager: WorkSessionManager = WorkSessionManager.getInstance(),
     onTimeEntriesChanged: (List<TimeEntry>) -> Unit = {},
-    onSettingsChanged: (Settings) -> Unit = {},
-    onNavigateToTimeReport: () -> Unit = {}
+    onSettingsChanged: (Settings) -> Unit = {}
 ) {
     val context = LocalContext.current
     
     var showAddDayDialog by remember { mutableStateOf(false) }
     var selectedEntry by remember { mutableStateOf<TimeEntry?>(null) }
+    var showLiveTimerHistory by remember { mutableStateOf(false) }
     
     LazyColumn(
         modifier = Modifier
@@ -114,15 +117,16 @@ fun LiveTimerScreen(
             // Quick Actions
             QuickActionsCard(
                 onAddManualEntry = { showAddDayDialog = true },
-                onViewHistory = { onNavigateToTimeReport() }
+                onViewHistory = { showLiveTimerHistory = true }
             )
         }
         
         item {
-            // Recent entries preview
-            if (timeEntries.isNotEmpty()) {
+            // Recent entries preview - only show Live Timer entries
+            val liveTimerEntries = timeEntries.filter { it.isFromLiveTimer }
+            if (liveTimerEntries.isNotEmpty()) {
                 RecentEntriesCard(
-                    entries = timeEntries.sortedByDescending { it.date }.take(3),
+                    entries = liveTimerEntries.sortedByDescending { it.date }.take(3),
                     onEntryClick = { entry ->
                         selectedEntry = entry
                         showAddDayDialog = true
@@ -160,6 +164,20 @@ fun LiveTimerScreen(
                 }
                 showAddDayDialog = false
                 selectedEntry = null
+            }
+        )
+    }
+    
+    // Live Timer History Dialog
+    if (showLiveTimerHistory) {
+        LiveTimerHistoryDialog(
+            isOpen = showLiveTimerHistory,
+            entries = timeEntries.filter { it.isFromLiveTimer }.sortedByDescending { it.date },
+            onDismiss = { showLiveTimerHistory = false },
+            onEntryClick = { entry ->
+                selectedEntry = entry
+                showLiveTimerHistory = false
+                showAddDayDialog = true
             }
         )
     }
@@ -364,4 +382,138 @@ private fun stopTimerService(context: Context) {
         action = TimerNotificationService.ACTION_STOP_TIMER
     }
     context.startService(intent)
+}
+
+@Composable
+private fun LiveTimerHistoryDialog(
+    isOpen: Boolean,
+    entries: List<TimeEntry>,
+    onDismiss: () -> Unit,
+    onEntryClick: (TimeEntry) -> Unit
+) {
+    if (isOpen) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Timer,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary
+                    )
+                    Text(
+                        text = "Live Timer Historik",
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.primary
+                    )
+                }
+            },
+            text = {
+                if (entries.isEmpty()) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.History,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Inga Live Timer-pass än",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                        )
+                        Text(
+                            text = "Starta din första timer för att se historik här!",
+                            style = MaterialTheme.typography.caption,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 400.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(entries) { entry ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onEntryClick(entry) },
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(12.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = entry.date.toString(),
+                                            style = MaterialTheme.typography.subtitle1,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                        Surface(
+                                            color = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+                                            shape = RoundedCornerShape(12.dp)
+                                        ) {
+                                            Text(
+                                                text = "Live Timer",
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                                style = MaterialTheme.typography.caption,
+                                                color = MaterialTheme.colors.primary,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                        }
+                                    }
+                                    
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            text = "${String.format("%.1f", entry.workHours)} timmar",
+                                            style = MaterialTheme.typography.body2,
+                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f)
+                                        )
+                                        Text(
+                                            text = "${String.format("%.0f", entry.totalPay)} kr",
+                                            style = MaterialTheme.typography.body2,
+                                            fontWeight = FontWeight.Medium,
+                                            color = MaterialTheme.colors.primary
+                                        )
+                                    }
+                                    
+                                    if (entry.startTime != null && entry.endTime != null) {
+                                        Text(
+                                            text = "${entry.startTime} - ${entry.endTime}",
+                                            style = MaterialTheme.typography.caption,
+                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("Stäng")
+                }
+            }
+        )
+    }
 }
