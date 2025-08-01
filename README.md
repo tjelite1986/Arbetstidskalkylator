@@ -75,7 +75,8 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 ## ✨ Funktioner
 
 ### 🕐 **Tidsrapportering**
-- **📅 Interaktiv kalendervy** - Klicka på vilken dag som helst för att se information
+- **📅 Klickbar kalendervy** - Klicka på arbetstider för detaljerad information
+- **ℹ️ Informationsdialog** - Visa starttid, sluttid, rast, arbetstimmar och intjänade pengar
 - **⏰ Intelligent tidsregistrering** med start- och sluttider
 - **🍽️ Smarta rastinställningar** - både klickbara tider och direktinmatning
 - **⏱️ Klickbara tidsväljare** för alla tidsfält med intuitivt gränssnitt
@@ -107,7 +108,7 @@ En modern Android-app byggd med **Kotlin** och **Jetpack Compose** för att hjä
 ### 🎨 **Modern Design**
 - **🎨 Material Design 3** med intuitivt användargränssnitt
 - **📅 Förbättrad kalendervy** med veckonummer och elegant layout
-- **🌙 Mörkt/ljust tema** för optimal synlighet
+- **🌙 Förenklat tema-val** - Ljust, mörkt eller följ system (färgschema borttaget)
 - **📱 Responsiv design** som fungerar på alla skärmstorlekar
 - **♿ Tillgänglighet** med stöd för skärmläsare
 
@@ -289,7 +290,15 @@ Detta projekt är licensierat under **MIT License** - se [LICENSE](LICENSE) file
 
 ## 🏆 Versionshistorik
 
-### 🚀 **v1.1.127** (Senaste)
+### 🚀 **v1.1.164** (Senaste)
+- **ℹ️ Ny informationsdialog för kalender** - Klicka på arbetstider för detaljvy
+- **📊 Detaljerad dagsinformation** - Visa starttid, sluttid, rast, arbetstimmar och intjänade pengar
+- **🎨 Förenklat tema-system** - Endast ljust/mörkt/följ system, färgschema borttaget
+- **📅 Månadsnamn med stor bokstav** - Förbättrad kalenderheader
+- **🔧 Förbättrad kalenderinteraktion** - Klickbara arbetstider med popup-info
+- **🎯 Bättre användarupplevelse** - Enklare och renare gränssnitt
+
+### 📋 **v1.1.127**
 - **📅 Fullständigt omdesignad kalendervy** - Modern design som matchar önskemål
 - **🔧 Interaktiv funktionalitet** - Klicka på vilken dag som helst för information
 - **✨ Lägg till/redigera arbetsdagar** direkt från kalendern
