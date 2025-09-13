@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="vertical"
+    android:padding="2dp"
+    android:background="@android:drawable/editbox_background"
+    android:layout_margin="1dp">
+
+    <TextView
+        android:id="@+id/tvDayNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="15"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/text_primary" />
+
+    <TextView
+        android:id="@+id/tvWorkTime"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="08:00\n17:00"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:textColor="@color/purple_500"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvEarnings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1385kr"
+        android:textSize="9sp"
+        android:gravity="center"
+        android:textColor="@color/text_secondary"
+        android:visibility="gone" />
+
+</LinearLayout>

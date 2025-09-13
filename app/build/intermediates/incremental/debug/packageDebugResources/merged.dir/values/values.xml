@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="accent_orange">#FFF57C00</color>
+    <color name="accent_orange_light">#FFFFB74D</color>
+    <color name="black">#FF000000</color>
+    <color name="border_color">#FF555555</color>
+    <color name="divider_color">#FF444444</color>
+    <color name="error_red">#FFF44336</color>
+    <color name="primary_blue">#FF1976D2</color>
+    <color name="primary_blue_dark">#FF0D47A1</color>
+    <color name="primary_blue_light">#FF42A5F5</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="red_400">#FFE53E3E</color>
+    <color name="secondary_green">#FF388E3C</color>
+    <color name="secondary_green_dark">#FF1B5E20</color>
+    <color name="secondary_green_light">#FF66BB6A</color>
+    <color name="success_green">#FF4CAF50</color>
+    <color name="surface_card">#FF1E1E1E</color>
+    <color name="surface_light">#FF121212</color>
+    <color name="surface_variant">#FF2C2C2C</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="text_hint">#FFAAAAAA</color>
+    <color name="text_hint_on_dark">#FFAAAAAA</color>
+    <color name="text_on_dark">#FFFFFFFF</color>
+    <color name="text_on_primary">#FFFFFFFF</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FFE0E0E0</color>
+    <color name="text_secondary_on_dark">#FFE0E0E0</color>
+    <color name="warning_amber">#FFFF9800</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Arbetstidskalkylator</string>
+    <style name="Theme.Arbetstidskalkylator" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_blue_dark</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        
+        
+        <item name="colorSecondary">@color/secondary_green</item>
+        <item name="colorSecondaryVariant">@color/secondary_green_dark</item>
+        <item name="colorOnSecondary">@color/text_on_primary</item>
+        
+        
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        
+        
+        <item name="android:colorBackground">@color/surface_light</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+        
+        
+        <item name="android:forceDarkAllowed">true</item>
+        
+        
+        <item name="colorError">@color/error_red</item>
+        <item name="colorOnError">@color/text_on_primary</item>
+        
+        
+        <item name="android:statusBarColor" ns1:targetApi="l">@color/primary_blue_dark</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">false</item>
+    </style>
+</resources>

@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/activity_calendar.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_calendar.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/calendar_day_cell.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/calendar_day_cell.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/activity_statistics.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_statistics.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/activity_settings.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/item_time_entry.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/item_time_entry.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/activity_history.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_history.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/item_overtime_rate.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/item_overtime_rate.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/activity_edit_time_entry.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_edit_time_entry.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-mergeDebugResources-38:/layout/activity_main.xml",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_main.xml"
+    }
+]

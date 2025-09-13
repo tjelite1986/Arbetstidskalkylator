@@ -1,0 +1,201 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="se.thomas.arbetstidskalkylator"
+4    android:versionCode="52"
+5    android:versionName="3.52" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission
+11-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:5:5-6:38
+12        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+12-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:5:22-78
+13        android:maxSdkVersion="28" />
+13-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:6:9-35
+14
+15    <permission
+15-->[androidx.core:core:1.12.0] /home/thomas/.gradle/caches/transforms-3/59c07a70fad39f3e4b4998ae77e25ca6/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+16        android:name="se.thomas.arbetstidskalkylator.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.12.0] /home/thomas/.gradle/caches/transforms-3/59c07a70fad39f3e4b4998ae77e25ca6/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.12.0] /home/thomas/.gradle/caches/transforms-3/59c07a70fad39f3e4b4998ae77e25ca6/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="se.thomas.arbetstidskalkylator.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.12.0] /home/thomas/.gradle/caches/transforms-3/59c07a70fad39f3e4b4998ae77e25ca6/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.12.0] /home/thomas/.gradle/caches/transforms-3/59c07a70fad39f3e4b4998ae77e25ca6/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:8:5-56:19
+22        android:allowBackup="true"
+22-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:9:9-35
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.12.0] /home/thomas/.gradle/caches/transforms-3/59c07a70fad39f3e4b4998ae77e25ca6/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+24        android:dataExtractionRules="@xml/data_extraction_rules"
+24-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:10:9-65
+25        android:debuggable="true"
+26        android:extractNativeLibs="false"
+27        android:fullBackupContent="@xml/backup_rules"
+27-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:11:9-54
+28        android:icon="@mipmap/ic_launcher"
+28-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:12:9-43
+29        android:label="@string/app_name"
+29-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:13:9-41
+30        android:roundIcon="@mipmap/ic_launcher_round"
+30-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:14:9-54
+31        android:supportsRtl="true"
+31-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:15:9-35
+32        android:theme="@style/Theme.Arbetstidskalkylator" >
+32-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:16:9-58
+33        <activity
+33-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:18:9-25:20
+34            android:name="se.thomas.arbetstidskalkylator.MainActivity"
+34-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:19:13-41
+35            android:exported="true" >
+35-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:20:13-36
+36            <intent-filter>
+36-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:21:13-24:29
+37                <action android:name="android.intent.action.MAIN" />
+37-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:22:17-69
+37-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:22:25-66
+38
+39                <category android:name="android.intent.category.LAUNCHER" />
+39-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:23:17-77
+39-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:23:27-74
+40            </intent-filter>
+41        </activity>
+42        <activity
+42-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:26:9-29:58
+43            android:name="se.thomas.arbetstidskalkylator.StatisticsActivity"
+43-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:27:13-47
+44            android:exported="false"
+44-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:28:13-37
+45            android:parentActivityName="se.thomas.arbetstidskalkylator.MainActivity" />
+45-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:29:13-55
+46        <activity
+46-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:30:9-33:58
+47            android:name="se.thomas.arbetstidskalkylator.HistoryActivity"
+47-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:31:13-44
+48            android:exported="false"
+48-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:32:13-37
+49            android:parentActivityName="se.thomas.arbetstidskalkylator.MainActivity" />
+49-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:33:13-55
+50        <activity
+50-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:34:9-37:58
+51            android:name="se.thomas.arbetstidskalkylator.SettingsActivity"
+51-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:35:13-45
+52            android:exported="false"
+52-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:36:13-37
+53            android:parentActivityName="se.thomas.arbetstidskalkylator.MainActivity" />
+53-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:37:13-55
+54        <activity
+54-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:38:9-41:61
+55            android:name="se.thomas.arbetstidskalkylator.EditTimeEntryActivity"
+55-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:39:13-50
+56            android:exported="false"
+56-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:40:13-37
+57            android:parentActivityName="se.thomas.arbetstidskalkylator.HistoryActivity" />
+57-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:41:13-58
+58        <activity
+58-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:42:9-45:58
+59            android:name="se.thomas.arbetstidskalkylator.CalendarActivity"
+59-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:43:13-45
+60            android:exported="false"
+60-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:44:13-37
+61            android:parentActivityName="se.thomas.arbetstidskalkylator.MainActivity" />
+61-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:45:13-55
+62
+63        <provider
+64            android:name="androidx.core.content.FileProvider"
+64-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:48:13-62
+65            android:authorities="se.thomas.arbetstidskalkylator.fileprovider"
+65-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:49:13-64
+66            android:exported="false"
+66-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:50:13-37
+67            android:grantUriPermissions="true" >
+67-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:51:13-47
+68            <meta-data
+68-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:52:13-54:54
+69                android:name="android.support.FILE_PROVIDER_PATHS"
+69-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:53:17-67
+70                android:resource="@xml/file_paths" />
+70-->/home/thomas/apps/arbetstidskalkylator/app/src/main/AndroidManifest.xml:54:17-51
+71        </provider>
+72        <provider
+72-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+73            android:name="androidx.startup.InitializationProvider"
+73-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+74            android:authorities="se.thomas.arbetstidskalkylator.androidx-startup"
+74-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+75            android:exported="false" >
+75-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+76            <meta-data
+76-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+77                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+77-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+78                android:value="androidx.startup" />
+78-->[androidx.emoji2:emoji2:1.2.0] /home/thomas/.gradle/caches/transforms-3/441af47faafbf36cb54bc448759154e9/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+79            <meta-data
+79-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/thomas/.gradle/caches/transforms-3/4efc4c71f582f914490695f1159be363/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:29:13-31:52
+80                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+80-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/thomas/.gradle/caches/transforms-3/4efc4c71f582f914490695f1159be363/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:30:17-78
+81                android:value="androidx.startup" />
+81-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/thomas/.gradle/caches/transforms-3/4efc4c71f582f914490695f1159be363/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:31:17-49
+82            <meta-data
+82-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+83                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+84                android:value="androidx.startup" />
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+85        </provider>
+86
+87        <service
+87-->[androidx.room:room-runtime:2.6.1] /home/thomas/.gradle/caches/transforms-3/791209061edb93a1cc1faa18fae8c5b4/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+88            android:name="androidx.room.MultiInstanceInvalidationService"
+88-->[androidx.room:room-runtime:2.6.1] /home/thomas/.gradle/caches/transforms-3/791209061edb93a1cc1faa18fae8c5b4/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+89            android:directBootAware="true"
+89-->[androidx.room:room-runtime:2.6.1] /home/thomas/.gradle/caches/transforms-3/791209061edb93a1cc1faa18fae8c5b4/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+90            android:exported="false" />
+90-->[androidx.room:room-runtime:2.6.1] /home/thomas/.gradle/caches/transforms-3/791209061edb93a1cc1faa18fae8c5b4/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+91
+92        <receiver
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+93            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+94            android:directBootAware="false"
+94-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+95            android:enabled="true"
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+96            android:exported="true"
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+97            android:permission="android.permission.DUMP" >
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+98            <intent-filter>
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+99                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+100            </intent-filter>
+101            <intent-filter>
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+102                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+102-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+102-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+103            </intent-filter>
+104            <intent-filter>
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+105                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+105-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+105-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+106            </intent-filter>
+107            <intent-filter>
+107-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+108                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+108-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+108-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/thomas/.gradle/caches/transforms-3/558c611544717230bf7b8d3cece91990/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+109            </intent-filter>
+110        </receiver>
+111    </application>
+112
+113</manifest>

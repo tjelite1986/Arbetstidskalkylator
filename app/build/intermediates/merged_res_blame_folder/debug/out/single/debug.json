@@ -1,0 +1,106 @@
+[
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/xml_data_extraction_rules.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_activity_calendar.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_calendar.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_calendar_day_cell.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/calendar_day_cell.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/drawable_ic_statistics.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/drawable/ic_statistics.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_activity_edit_time_entry.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_edit_time_entry.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_item_overtime_rate.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/item_overtime_rate.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/drawable_ic_settings.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/drawable/ic_settings.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_item_time_entry.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/item_time_entry.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/xml_backup_rules.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_activity_settings.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_activity_history.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_history.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_activity_statistics.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_statistics.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/drawable_ic_history.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/drawable/ic_history.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/xml_file_paths.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/xml/file_paths.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/layout_activity_main.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/layout/activity_main.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/drawable_ic_calendar.xml.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/drawable/ic_calendar.xml"
+    },
+    {
+        "merged": "se.thomas.arbetstidskalkylator.app-merged_res-39:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "se.thomas.arbetstidskalkylator.app-main-41:/mipmap-hdpi/ic_launcher_round.png"
+    }
+]
