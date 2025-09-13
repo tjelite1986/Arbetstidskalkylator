@@ -1,0 +1,25 @@
+# Build artifacts
+/app/build/
+.gradle/
+
+# APK files
+*.apk
+
+# Temporary files
+temp.*
+*.tmp
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Local properties
+local.properties
+
+# Mac
+.DS_Store
+
+# Log files
+*.log
