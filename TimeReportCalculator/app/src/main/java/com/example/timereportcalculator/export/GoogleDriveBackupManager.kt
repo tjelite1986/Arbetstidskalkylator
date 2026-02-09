@@ -106,7 +106,6 @@ class GoogleDriveBackupManager(private val context: Context) {
             
             // Create app folder if it doesn't exist
             val appFolderId = getOrCreateAppFolder(driveService)
-                ?: return@withContext Result.failure(Exception("Could not create app folder"))
             
             // Read local backup file
             val localFile = java.io.File(context.filesDir, "timereports/$localFileName")
@@ -137,33 +136,29 @@ class GoogleDriveBackupManager(private val context: Context) {
         }
     }
     
-    private suspend fun getOrCreateAppFolder(driveService: Drive): String? = withContext(Dispatchers.IO) {
-        try {
-            // Search for existing app folder
-            val query = "name='$APP_FOLDER_NAME' and mimeType='application/vnd.google-apps.folder' and trashed=false"
-            val result = driveService.files().list()
-                .setQ(query)
-                .setSpaces("drive")
-                .execute()
-            
-            if (result.files.isNotEmpty()) {
-                return@withContext result.files[0].id
-            }
-            
-            // Create new app folder
-            val folderMetadata = File().apply {
-                name = APP_FOLDER_NAME
-                mimeType = "application/vnd.google-apps.folder"
-            }
-            
-            val folder = driveService.files().create(folderMetadata)
-                .setFields("id")
-                .execute()
-            
-            folder.id
-        } catch (e: Exception) {
-            null
+    private suspend fun getOrCreateAppFolder(driveService: Drive): String = withContext(Dispatchers.IO) {
+        // Search for existing app folder
+        val query = "name='$APP_FOLDER_NAME' and mimeType='application/vnd.google-apps.folder' and trashed=false"
+        val result = driveService.files().list()
+            .setQ(query)
+            .setSpaces("drive")
+            .execute()
+
+        if (result.files.isNotEmpty()) {
+            return@withContext result.files[0].id
         }
+
+        // Create new app folder
+        val folderMetadata = File().apply {
+            name = APP_FOLDER_NAME
+            mimeType = "application/vnd.google-apps.folder"
+        }
+
+        val folder = driveService.files().create(folderMetadata)
+            .setFields("id")
+            .execute()
+
+        folder.id
     }
     
     suspend fun listDriveBackups(): Result<List<DriveBackupInfo>> = withContext(Dispatchers.IO) {
@@ -173,7 +168,6 @@ class GoogleDriveBackupManager(private val context: Context) {
             
             val driveService = getDriveService(account)
             val appFolderId = getOrCreateAppFolder(driveService)
-                ?: return@withContext Result.failure(Exception("Could not access app folder"))
             
             val query = "'$appFolderId' in parents and mimeType='application/json' and trashed=false"
             val result = driveService.files().list()

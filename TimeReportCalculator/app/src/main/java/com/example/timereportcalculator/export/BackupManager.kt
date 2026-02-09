@@ -95,18 +95,6 @@ class BackupManager(private val context: Context) {
                     lastAutoBackup = LocalDateTime.now()
                 }
                 
-                // Upload to Google Drive if enabled
-                if (googleDriveBackupManager.isGoogleDriveEnabled && googleDriveBackupManager.isSignedIn()) {
-                    try {
-                        val driveResult = googleDriveBackupManager.uploadBackupToDrive(result.getOrNull() ?: fileName)
-                        if (driveResult.isSuccess) {
-                            // Successfully uploaded to Google Drive
-                        }
-                    } catch (e: Exception) {
-                        // Continue even if Google Drive upload fails
-                    }
-                }
-                
                 // Clean up old backups if needed
                 cleanupOldBackups()
                 
