@@ -29,7 +29,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.timereportcalculator"
+        applicationId "com.dev.tidrapport.test"
         minSdk 21
         targetSdk 34
         versionCode autoVersionCode
@@ -48,8 +48,8 @@ android {
             signingConfig signingConfigs.debug
         }
         debug {
-            applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            resValue "string", "app_name", "Tidrapport DEV"
         }
     }
     
@@ -97,6 +97,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+    lintOptions {
+        disable 'DuplicatePlatformClasses'
+    }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -128,6 +131,12 @@ dependencies {
     
     // JSON serialization for offline storage
     implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // Google Drive API for cloud backup
+    implementation 'com.google.android.gms:play-services-auth:21.0.0'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0'
+    implementation 'com.google.api-client:google-api-client-android:2.2.0'
+    implementation 'com.google.http-client:google-http-client-android:1.43.3'
     
     // File picker for easy file operations
     implementation 'androidx.activity:activity-ktx:1.8.2'
