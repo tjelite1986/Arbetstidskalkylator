@@ -88,9 +88,15 @@ fun TimeEntryCard(
     }
     
     // Automatiskt markera som röd dag om det är helgdag
+    val isHalfDay = if (settings.automaticHolidayDetection) {
+        SwedishHolidayCalculator.isHalfDayHoliday(entry.date)
+    } else {
+        false
+    }
+
     LaunchedEffect(isSwedishHoliday) {
         if (isSwedishHoliday && !entry.isRedDay) {
-            onEntryChange(entry.copy(isRedDay = true))
+            onEntryChange(entry.copy(isRedDay = true, isHalfDayHoliday = isHalfDay))
         }
     }
     
@@ -128,7 +134,7 @@ fun TimeEntryCard(
                         Row {
                             if (entry.isRedDay) {
                                 Text(
-                                    text = "Röd dag",
+                                    text = if (entry.isHalfDayHoliday) "Aftonshelgdag" else "Röd dag",
                                     style = MaterialTheme.typography.caption,
                                     color = Color.Red,
                                     modifier = Modifier.padding(end = 8.dp)

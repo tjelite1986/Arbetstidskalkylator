@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.timereportcalculator.calculator.PayCalculator
 import com.example.timereportcalculator.navigation.NavigationItem
 import com.example.timereportcalculator.navigation.bottomNavigationItems
 import com.example.timereportcalculator.ui.components.SmoothBottomBar
@@ -31,6 +32,9 @@ fun MainApp() {
     val sharedSessionManager = remember { 
         com.example.timereportcalculator.timer.WorkSessionManager.getInstance()
     }
+    
+    // PayCalculator instance
+    val payCalculator = remember { PayCalculator() }
     
     // Auto-load data on app start
     LaunchedEffect(Unit) {
@@ -57,6 +61,16 @@ fun MainApp() {
             if (completedEntry != null) {
                 // Add completed session to shared entries
                 sharedTimeEntries = (sharedTimeEntries + completedEntry).sortedByDescending { it.date }
+            }
+        }
+    }
+
+    // Recalculate accumulated vacation pay whenever entries or vacation settings change
+    LaunchedEffect(sharedTimeEntries, sharedSettings.vacationPaymentMode, sharedSettings.vacationRate, sharedSettings.vacationPayoutHistory) {
+        if (!isLoading) {
+            val newAccumulated = payCalculator.recalculateAccumulatedVacationPay(sharedTimeEntries, sharedSettings)
+            if (newAccumulated != sharedSettings.accumulatedVacationPay) {
+                sharedSettings = sharedSettings.copy(accumulatedVacationPay = newAccumulated)
             }
         }
     }
@@ -160,7 +174,15 @@ fun MainApp() {
                 currentDestination = NavigationItem.Statistics
                 StatisticsScreen(
                     timeEntries = sharedTimeEntries,
-                    settings = sharedSettings
+                    settings = sharedSettings,
+                    onAddTimeEntry = { timeEntry ->
+                        sharedTimeEntries = (sharedTimeEntries + timeEntry).sortedByDescending { it.date }
+                    },
+                    onEditTimeEntry = { editedEntry ->
+                        sharedTimeEntries = sharedTimeEntries.map { entry ->
+                            if (entry.date == editedEntry.date) editedEntry else entry
+                        }.sortedByDescending { it.date }
+                    }
                 )
             }
             

@@ -8,7 +8,8 @@ import java.time.temporal.TemporalAdjusters
 data class Holiday(
     val date: LocalDate,
     val name: String,
-    val isCustom: Boolean = false
+    val isCustom: Boolean = false,
+    val isHalfDay: Boolean = false // Aftonshelgdag: OB bara efter 12:00
 )
 
 data class WorkTimeSettings(
@@ -40,14 +41,15 @@ object SwedishHolidayCalculator {
         holidays.add(Holiday(LocalDate.of(year, Month.JANUARY, 6), "Trettondedag jul"))
         holidays.add(Holiday(LocalDate.of(year, Month.MAY, 1), "Första maj"))
         holidays.add(Holiday(LocalDate.of(year, Month.JUNE, 6), "Sveriges nationaldag"))
-        holidays.add(Holiday(LocalDate.of(year, Month.DECEMBER, 24), "Julafton"))
+        holidays.add(Holiday(LocalDate.of(year, Month.DECEMBER, 24), "Julafton", isHalfDay = true))
         holidays.add(Holiday(LocalDate.of(year, Month.DECEMBER, 25), "Juldagen"))
         holidays.add(Holiday(LocalDate.of(year, Month.DECEMBER, 26), "Annandag jul"))
-        holidays.add(Holiday(LocalDate.of(year, Month.DECEMBER, 31), "Nyårsafton"))
+        holidays.add(Holiday(LocalDate.of(year, Month.DECEMBER, 31), "Nyårsafton", isHalfDay = true))
         
         // Easter-dependent holidays
         val easter = calculateEaster(year)
         holidays.add(Holiday(easter.minusDays(2), "Långfredag"))
+        holidays.add(Holiday(easter.minusDays(1), "Påskafton", isHalfDay = true))
         holidays.add(Holiday(easter, "Påskdagen"))
         holidays.add(Holiday(easter.plusDays(1), "Annandag påsk"))
         holidays.add(Holiday(easter.plusDays(39), "Kristi himmelsfärdsdag"))
@@ -58,9 +60,9 @@ object SwedishHolidayCalculator {
             .with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY))
         if (midsummerFriday.dayOfMonth > 25) {
             // If June 19 is Saturday, midsummer is June 25
-            holidays.add(Holiday(LocalDate.of(year, Month.JUNE, 25), "Midsommarafton"))
+            holidays.add(Holiday(LocalDate.of(year, Month.JUNE, 25), "Midsommarafton", isHalfDay = true))
         } else {
-            holidays.add(Holiday(midsummerFriday, "Midsommarafton"))
+            holidays.add(Holiday(midsummerFriday, "Midsommarafton", isHalfDay = true))
         }
         holidays.add(Holiday(midsummerFriday.plusDays(1), "Midsommardagen"))
         
@@ -100,6 +102,11 @@ object SwedishHolidayCalculator {
     fun getHolidayName(date: LocalDate): String? {
         val holidays = getSwedishHolidays(date.year)
         return holidays.find { it.date == date }?.name
+    }
+
+    fun isHalfDayHoliday(date: LocalDate): Boolean {
+        val holidays = getSwedishHolidays(date.year)
+        return holidays.any { it.date == date && it.isHalfDay }
     }
 }
 

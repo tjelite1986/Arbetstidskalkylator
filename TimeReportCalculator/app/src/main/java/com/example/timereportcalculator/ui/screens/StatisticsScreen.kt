@@ -16,7 +16,9 @@ import com.example.timereportcalculator.ui.components.CalendarView
 @Composable
 fun StatisticsScreen(
     timeEntries: List<TimeEntry> = emptyList(),
-    settings: Settings = Settings()
+    settings: Settings = Settings(),
+    onAddTimeEntry: (TimeEntry) -> Unit = {},
+    onEditTimeEntry: (TimeEntry) -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -62,6 +64,8 @@ fun StatisticsScreen(
         CalendarView(
             timeEntries = timeEntries,
             settings = settings,
+            onAddTimeEntry = onAddTimeEntry,
+            onEditTimeEntry = onEditTimeEntry,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 16.dp)

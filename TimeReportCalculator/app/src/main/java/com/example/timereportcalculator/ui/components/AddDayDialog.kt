@@ -30,21 +30,39 @@ import java.time.format.DateTimeFormatter
 fun AddDayDialog(
     isOpen: Boolean,
     settings: Settings,
+    selectedDate: LocalDate? = null,
+    existingTimeEntry: TimeEntry? = null,
     onDismiss: () -> Unit,
     onConfirm: (TimeEntry) -> Unit
 ) {
     if (!isOpen) return
     
-    // State för alla fält
-    var date by remember { mutableStateOf(LocalDate.now()) }
-    var startTime by remember { mutableStateOf(settings.workTimeSettings.defaultStartTime) }
-    var endTime by remember { mutableStateOf(settings.workTimeSettings.defaultEndTime) }
+    // State för alla fält - använd befintliga värden om vi redigerar
+    var date by remember { mutableStateOf(selectedDate ?: existingTimeEntry?.date ?: LocalDate.now()) }
+    var startTime by remember { 
+        mutableStateOf(
+            existingTimeEntry?.startTime ?: try { 
+                LocalTime.parse(settings.workTimeSettings.defaultStartTime) 
+            } catch (e: Exception) { 
+                LocalTime.of(8, 0) 
+            }
+        ) 
+    }
+    var endTime by remember { 
+        mutableStateOf(
+            existingTimeEntry?.endTime ?: try { 
+                LocalTime.parse(settings.workTimeSettings.defaultEndTime) 
+            } catch (e: Exception) { 
+                LocalTime.of(17, 0) 
+            }
+        ) 
+    }
     var breakStartTime by remember { mutableStateOf("") }
     var breakEndTime by remember { mutableStateOf("") }
-    var breakMinutes by remember { mutableStateOf("") }
+    var breakMinutes by remember { mutableStateOf(existingTimeEntry?.breakMinutes?.toString() ?: "") }
     var description by remember { mutableStateOf("") }
     var useAutomaticBreaks by remember { mutableStateOf(false) }
-    var isSickDay by remember { mutableStateOf(false) }
+    var isSickDay by remember { mutableStateOf(existingTimeEntry?.isSickDay ?: false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showStartTimePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }
@@ -283,8 +301,8 @@ fun AddDayDialog(
                                             firstRow.forEach { template ->
                                                 Button(
                                                     onClick = {
-                                                        startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
-                                                        endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                                        startTime = template.startTime
+                                                        endTime = template.endTime
                                                         breakMinutes = template.breakMinutes.toString()
                                                         useAutomaticBreaks = false
                                                     },
@@ -317,8 +335,8 @@ fun AddDayDialog(
                                             secondRow.forEach { template ->
                                                 Button(
                                                     onClick = {
-                                                        startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
-                                                        endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                                        startTime = template.startTime
+                                                        endTime = template.endTime
                                                         breakMinutes = template.breakMinutes.toString()
                                                         useAutomaticBreaks = false
                                                     },
@@ -387,7 +405,7 @@ fun AddDayDialog(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = if (startTime.isNotEmpty()) startTime else "08:00",
+                                            text = startTime?.let { String.format("%02d:%02d", it.hour, it.minute) } ?: "08:00",
                                             style = MaterialTheme.typography.body1
                                         )
                                     }
@@ -412,7 +430,7 @@ fun AddDayDialog(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = if (endTime.isNotEmpty()) endTime else "17:00",
+                                            text = endTime?.let { String.format("%02d:%02d", it.hour, it.minute) } ?: "17:00",
                                             style = MaterialTheme.typography.body1
                                         )
                                     }
@@ -664,24 +682,15 @@ fun AddDayDialog(
                         onClick = {
                             try {
                                 // Validate input - arbetstider krävs alltid (även för sjukdagar)
-                                if (startTime.isBlank() || endTime.isBlank()) {
+                                if (startTime == null || endTime == null) {
                                     errorMessage = "Start- och sluttid måste anges"
                                     hasErrors = true
                                     return@Button
                                 }
                                 
-                                // Parse times - alltid parse för både arbets- och sjukdagar
-                                val parsedStartTime = try {
-                                    LocalTime.parse(startTime)
-                                } catch (e: Exception) {
-                                    throw IllegalArgumentException("Ogiltig starttid: $startTime")
-                                }
-                                
-                                val parsedEndTime = try {
-                                    LocalTime.parse(endTime)
-                                } catch (e: Exception) {
-                                    throw IllegalArgumentException("Ogiltig sluttid: $endTime")
-                                }
+                                // Use times directly since they are already LocalTime objects
+                                val parsedStartTime = startTime!!
+                                val parsedEndTime = endTime!!
                                 
                                 val parsedBreakStart = if (useAutomaticBreaks || breakStartTime.isBlank()) {
                                     null
@@ -764,9 +773,9 @@ fun AddDayDialog(
     // TimePicker Dialogs
     if (showStartTimePicker) {
         TimePickerDialog(
-            selectedTime = try { LocalTime.parse(startTime) } catch (e: Exception) { LocalTime.of(8, 0) },
+            selectedTime = startTime ?: LocalTime.of(8, 0),
             onTimeSelected = { selectedTime ->
-                startTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                startTime = selectedTime
                 showStartTimePicker = false
             },
             onDismiss = { showStartTimePicker = false },
@@ -776,9 +785,9 @@ fun AddDayDialog(
     
     if (showEndTimePicker) {
         TimePickerDialog(
-            selectedTime = try { LocalTime.parse(endTime) } catch (e: Exception) { LocalTime.of(17, 0) },
+            selectedTime = endTime ?: LocalTime.of(17, 0),
             onTimeSelected = { selectedTime ->
-                endTime = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                endTime = selectedTime
                 showEndTimePicker = false
             },
             onDismiss = { showEndTimePicker = false },
@@ -819,8 +828,8 @@ fun AddDayDialog(
             showWorkShiftTemplateDialog = false 
         },
         onTemplateSelected = { template ->
-            startTime = template.startTime.format(DateTimeFormatter.ofPattern("HH:mm"))
-            endTime = template.endTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+            startTime = template.startTime
+            endTime = template.endTime
             breakMinutes = template.breakMinutes.toString()
             useAutomaticBreaks = false
             favoriteTemplates.value = templateManager.getFavoriteTemplates()

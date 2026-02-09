@@ -3,6 +3,8 @@ package com.example.timereportcalculator.calculator
 import com.example.timereportcalculator.data.OBRates
 import com.example.timereportcalculator.data.Settings
 import com.example.timereportcalculator.data.TimeEntry
+import com.example.timereportcalculator.data.VacationPaymentMode
+import com.example.timereportcalculator.data.VacationPayout
 import com.example.timereportcalculator.data.WorkplaceType
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -28,7 +30,19 @@ class PayCalculator {
         val basePay = workHours * settings.basePay
         val (obPay, obBreakdown) = calculateOBPay(entry, settings, workHours)
         val grossPay = basePay + obPay
-        val vacationPay = grossPay * (settings.vacationRate / 100.0)
+        
+        // Beräkna semesterersättning baserat på valt betalningssätt
+        val vacationPay = when (settings.vacationPaymentMode) {
+            VacationPaymentMode.INCLUDED_IN_SALARY -> {
+                // Inkluderat i månadslön: lägg till 12% till utbetalningen
+                grossPay * (settings.vacationRate / 100.0)
+            }
+            VacationPaymentMode.SEPARATE_ACCUMULATION -> {
+                // Separat ackumulering: lägg inte till i utbetalningen, bara beräkna för ackumulering
+                0.0
+            }
+        }
+        
         val totalPay = grossPay + vacationPay
         val taxAmount = totalPay * (settings.taxRate / 100.0)
         val netPay = totalPay - taxAmount
@@ -60,16 +74,16 @@ class PayCalculator {
     
     private fun calculateSickPay(entry: TimeEntry, settings: Settings): TimeEntry {
         // Svenska sjuklöneregler för detaljhandeln:
-        // Dag 1: Karensdag - ingen lön (0 kr) 
+        // Dag 1: Karensdag - ingen lön (0 kr)
         // Dag 2+: 80% av grundlön för angivna arbetstimmar (inte automatiska 8h)
-        
+
         val sickPayHours = if (entry.sickDayNumber == 1) {
             0.0 // Karensdag - inga timmar, ingen lön
         } else {
             // Använd angivna arbetstimmar från TimeEntry
             entry.workHours
         }
-        
+
         val grossPay = if (entry.sickDayNumber == 1) {
             // Karensdag - ingen lön
             0.0
@@ -78,8 +92,12 @@ class PayCalculator {
             val sickPayRate = settings.basePay * 0.8
             sickPayHours * sickPayRate
         }
-        
-        val vacationPay = grossPay * (settings.vacationRate / 100.0)
+
+        // Beräkna semesterersättning baserat på valt betalningssätt
+        val vacationPay = when (settings.vacationPaymentMode) {
+            VacationPaymentMode.INCLUDED_IN_SALARY -> grossPay * (settings.vacationRate / 100.0)
+            VacationPaymentMode.SEPARATE_ACCUMULATION -> 0.0
+        }
         val totalPay = grossPay + vacationPay
         val taxAmount = totalPay * (settings.taxRate / 100.0)
         val netPay = totalPay - taxAmount
@@ -205,12 +223,27 @@ class PayCalculator {
         var obPay = 0.0
         val obBreakdown = mutableMapOf<String, Double>()
         
-        // Red day gets 100% bonus for all hours
+        // Red day gets 100% bonus for all hours (or after 12:00 for half-day holidays)
         if (entry.isRedDay) {
-            val redDayPay = workHours * settings.basePay * obRates.butikRedDayAllDay
-            obPay += redDayPay
-            if (redDayPay > 0) {
-                obBreakdown["OB-tillägg ${String.format("%.0f", obRates.butikRedDayAllDay * 100)}% (röd dag)"] = redDayPay
+            if (entry.isHalfDayHoliday) {
+                // Aftonshelgdag: OB bara efter 12:00 (som lördag)
+                val obThreshold = LocalTime.of(12, 0)
+                if (entry.startTime != null && entry.endTime != null && entry.endTime.isAfter(obThreshold)) {
+                    val obStart = maxOf(entry.startTime, obThreshold)
+                    val obMinutes = ChronoUnit.MINUTES.between(obStart, entry.endTime)
+                    val obHours = obMinutes / 60.0
+                    val halfDayPay = obHours * settings.basePay * obRates.butikRedDayAllDay
+                    obPay += halfDayPay
+                    if (halfDayPay > 0) {
+                        obBreakdown["OB-tillägg ${String.format("%.0f", obRates.butikRedDayAllDay * 100)}% (aftonshelgdag efter 12:00)"] = halfDayPay
+                    }
+                }
+            } else {
+                val redDayPay = workHours * settings.basePay * obRates.butikRedDayAllDay
+                obPay += redDayPay
+                if (redDayPay > 0) {
+                    obBreakdown["OB-tillägg ${String.format("%.0f", obRates.butikRedDayAllDay * 100)}% (röd dag)"] = redDayPay
+                }
             }
         }
         // Sunday gets 100% bonus for all hours
@@ -274,12 +307,27 @@ class PayCalculator {
         var obPay = 0.0
         val obBreakdown = mutableMapOf<String, Double>()
         
-        // Red day gets 100% bonus for all hours
+        // Red day gets 100% bonus for all hours (or after 12:00 for half-day holidays)
         if (entry.isRedDay) {
-            val redDayPay = workHours * settings.basePay * obRates.lagerRedDayAllDay
-            obPay += redDayPay
-            if (redDayPay > 0) {
-                obBreakdown["OB-tillägg ${String.format("%.0f", obRates.lagerRedDayAllDay * 100)}% (röd dag)"] = redDayPay
+            if (entry.isHalfDayHoliday) {
+                // Aftonshelgdag: OB bara efter 12:00 (som lördag)
+                val obThreshold = LocalTime.of(12, 0)
+                if (entry.startTime != null && entry.endTime != null && entry.endTime.isAfter(obThreshold)) {
+                    val obStart = maxOf(entry.startTime, obThreshold)
+                    val obMinutes = ChronoUnit.MINUTES.between(obStart, entry.endTime)
+                    val obHours = obMinutes / 60.0
+                    val halfDayPay = obHours * settings.basePay * obRates.lagerRedDayAllDay
+                    obPay += halfDayPay
+                    if (halfDayPay > 0) {
+                        obBreakdown["OB-tillägg ${String.format("%.0f", obRates.lagerRedDayAllDay * 100)}% (aftonshelgdag efter 12:00)"] = halfDayPay
+                    }
+                }
+            } else {
+                val redDayPay = workHours * settings.basePay * obRates.lagerRedDayAllDay
+                obPay += redDayPay
+                if (redDayPay > 0) {
+                    obBreakdown["OB-tillägg ${String.format("%.0f", obRates.lagerRedDayAllDay * 100)}% (röd dag)"] = redDayPay
+                }
             }
         }
         // Sunday gets 100% bonus for all hours
@@ -403,5 +451,42 @@ class PayCalculator {
     
     private fun minOf(time1: LocalTime, time2: LocalTime): LocalTime {
         return if (time1.isBefore(time2)) time1 else time2
+    }
+    
+    /**
+     * Beräknar total ackumulerad semesterersättning baserat på alla poster.
+     * Drar av redan uttagna belopp från historiken.
+     * Denna funktion är idempotent - kan anropas hur många gånger som helst utan dubbelräkning.
+     */
+    fun recalculateAccumulatedVacationPay(allEntries: List<TimeEntry>, settings: Settings): Double {
+        if (settings.vacationPaymentMode != VacationPaymentMode.SEPARATE_ACCUMULATION) {
+            return 0.0
+        }
+
+        val totalVacation = allEntries
+            .sumOf { it.grossPay * (settings.vacationRate / 100.0) }
+
+        val totalWithdrawn = settings.vacationPayoutHistory.sumOf { it.amount }
+        return maxOf(0.0, totalVacation - totalWithdrawn)
+    }
+    
+    /**
+     * Tar ut en del av eller hela den ackumulerade semesterersättningen
+     */
+    fun withdrawVacationPay(amount: Double, reason: String, settings: Settings): Settings {
+        if (amount <= 0 || amount > settings.accumulatedVacationPay) {
+            throw IllegalArgumentException("Ogiltigt belopp för uttag av semesterersättning")
+        }
+
+        val payout = VacationPayout(
+            amount = amount,
+            reason = reason,
+            description = "Uttag av semesterersättning: $reason"
+        )
+
+        // Lägg till uttaget i historiken - accumulatedVacationPay räknas om automatiskt
+        return settings.copy(
+            vacationPayoutHistory = settings.vacationPayoutHistory + payout
+        )
     }
 }

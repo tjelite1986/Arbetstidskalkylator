@@ -19,6 +19,7 @@ data class TimeEntryJson(
     val breakEnd: String?, // HH:mm format
     val breakMinutes: Int,
     val isRedDay: Boolean,
+    val isHalfDayHoliday: Boolean? = null,
     val isSickDay: Boolean,
     val sickDayNumber: Int? = null,
     val workHours: Double,
@@ -38,10 +39,16 @@ data class SettingsJson(
     val obRates: OBRatesJson? = null,
     val contractLevel: String? = null,
     val vacationRate: Double? = null,
+    val vacationPaymentMode: String? = null,
+    val accumulatedVacationPay: Double? = null,
+    val vacationPayoutHistory: List<VacationPayoutJson>? = null,
     val workTimeSettings: WorkTimeSettingsJson? = null,
     val calendarSettings: CalendarSettingsJson? = null,
     val customHolidays: List<HolidayJson>? = null,
-    val automaticHolidayDetection: Boolean? = null
+    val automaticHolidayDetection: Boolean? = null,
+    val useTaxTable: Boolean? = null,
+    val employeeName: String? = null,
+    val employerName: String? = null
 )
 
 data class WorkTimeSettingsJson(
@@ -72,6 +79,14 @@ data class HolidayJson(
     val date: String, // ISO format
     val name: String,
     val isCustom: Boolean
+)
+
+data class VacationPayoutJson(
+    val id: String,
+    val date: String, // ISO format: yyyy-MM-dd
+    val amount: Double,
+    val description: String,
+    val reason: String
 )
 
 data class OBRatesJson(
@@ -112,6 +127,7 @@ fun TimeEntry.toJson(): TimeEntryJson {
         breakEnd = this.breakEnd?.toString(),
         breakMinutes = this.breakMinutes,
         isRedDay = this.isRedDay,
+        isHalfDayHoliday = this.isHalfDayHoliday,
         isSickDay = this.isSickDay,
         sickDayNumber = this.sickDayNumber,
         workHours = this.workHours,
@@ -136,6 +152,7 @@ fun TimeEntryJson.toTimeEntry(): TimeEntry {
         breakEnd = this.breakEnd?.let { LocalTime.parse(it) },
         breakMinutes = this.breakMinutes,
         isRedDay = this.isRedDay,
+        isHalfDayHoliday = this.isHalfDayHoliday ?: false,
         isSickDay = this.isSickDay,
         sickDayNumber = this.sickDayNumber ?: 1,
         workHours = this.workHours,
@@ -174,6 +191,17 @@ fun Settings.toJson(): SettingsJson {
         ),
         contractLevel = this.contractLevel.name,
         vacationRate = this.vacationRate,
+        vacationPaymentMode = this.vacationPaymentMode.name,
+        accumulatedVacationPay = this.accumulatedVacationPay,
+        vacationPayoutHistory = this.vacationPayoutHistory.map { payout ->
+            VacationPayoutJson(
+                id = payout.id,
+                date = payout.date.toString(),
+                amount = payout.amount,
+                description = payout.description,
+                reason = payout.reason
+            )
+        },
         workTimeSettings = WorkTimeSettingsJson(
             defaultStartTime = this.workTimeSettings.defaultStartTime,
             defaultEndTime = this.workTimeSettings.defaultEndTime,
@@ -197,7 +225,10 @@ fun Settings.toJson(): SettingsJson {
                 isCustom = holiday.isCustom
             )
         },
-        automaticHolidayDetection = this.automaticHolidayDetection
+        automaticHolidayDetection = this.automaticHolidayDetection,
+        useTaxTable = this.useTaxTable,
+        employeeName = this.employeeName,
+        employerName = this.employerName
     )
 }
 
@@ -242,6 +273,19 @@ fun SettingsJson.toSettings(): Settings {
             ContractLevel.valueOf(it) 
         } ?: ContractLevel.EXPERIENCE_2_YEARS,
         vacationRate = this.vacationRate ?: 12.0,
+        vacationPaymentMode = this.vacationPaymentMode?.let {
+            VacationPaymentMode.valueOf(it)
+        } ?: VacationPaymentMode.INCLUDED_IN_SALARY,
+        accumulatedVacationPay = this.accumulatedVacationPay ?: 0.0,
+        vacationPayoutHistory = this.vacationPayoutHistory?.map { payoutJson ->
+            VacationPayout(
+                id = payoutJson.id,
+                date = java.time.LocalDate.parse(payoutJson.date),
+                amount = payoutJson.amount,
+                description = payoutJson.description,
+                reason = payoutJson.reason
+            )
+        } ?: emptyList(),
         workTimeSettings = this.workTimeSettings?.let { wts ->
             WorkTimeSettings(
                 defaultStartTime = wts.defaultStartTime,
@@ -270,7 +314,10 @@ fun SettingsJson.toSettings(): Settings {
                 isCustom = holidayJson.isCustom
             )
         } ?: emptyList(),
-        automaticHolidayDetection = this.automaticHolidayDetection ?: true
+        automaticHolidayDetection = this.automaticHolidayDetection ?: true,
+        useTaxTable = this.useTaxTable ?: false,
+        employeeName = this.employeeName ?: "",
+        employerName = this.employerName ?: ""
     )
 }
 

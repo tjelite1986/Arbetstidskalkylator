@@ -22,8 +22,14 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     onFilePickerClick: () -> Unit = {}
 ) {
-    var basePayText by remember { mutableStateOf(settings.basePay.toString()) }
-    var taxRateText by remember { mutableStateOf(settings.taxRate.toString()) }
+    var basePayText by remember { mutableStateOf(
+        if (settings.basePay == settings.basePay.toInt().toDouble()) settings.basePay.toInt().toString()
+        else settings.basePay.toString()
+    ) }
+    var taxRateText by remember { mutableStateOf(
+        if (settings.taxRate == settings.taxRate.toInt().toDouble()) settings.taxRate.toInt().toString()
+        else settings.taxRate.toString()
+    ) }
     
     Dialog(onDismissRequest = onDismiss) {
         Card(

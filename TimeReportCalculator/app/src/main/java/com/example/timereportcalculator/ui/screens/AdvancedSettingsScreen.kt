@@ -1,5 +1,6 @@
 package com.example.timereportcalculator.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -191,6 +192,26 @@ fun AdvancedSettingsScreen(
                 )
             }
         }
+
+        item {
+            // Personal Info Section (for Lönebesked)
+            SettingsSection(
+                title = "\uD83D\uDC64 Personuppgifter",
+                isExpanded = expandedSections.contains("personal"),
+                onExpandChanged = { expanded ->
+                    expandedSections = if (expanded) {
+                        expandedSections + "personal"
+                    } else {
+                        expandedSections - "personal"
+                    }
+                }
+            ) {
+                PersonalInfoContent(
+                    settings = settings,
+                    onSettingsChange = onSettingsChange
+                )
+            }
+        }
     }
 }
 
@@ -242,8 +263,8 @@ private fun BasicSettingsContent(
     settings: Settings,
     onSettingsChange: (Settings) -> Unit
 ) {
-    var basePayText by remember(settings.basePay) { mutableStateOf(formatDecimal(settings.basePay)) }
-    var taxRateText by remember(settings.taxRate) { mutableStateOf(settings.taxRate.toString()) }
+    var basePayText by remember { mutableStateOf(formatDecimal(settings.basePay)) }
+    var taxRateText by remember { mutableStateOf(formatDecimal(settings.taxRate)) }
     
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -282,8 +303,55 @@ private fun BasicSettingsContent(
             label = { Text("Skattesats (%)") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            singleLine = true
+            singleLine = true,
+            enabled = !settings.useTaxTable
         )
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = if (settings.useTaxTable)
+                MaterialTheme.colors.primary.copy(alpha = 0.1f)
+            else
+                MaterialTheme.colors.surface
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Skattetabell 35",
+                            style = MaterialTheme.typography.subtitle1,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Beräkna skatt enligt Skatteverkets allmänna tabell 35 istället för fast procentsats",
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                        )
+                    }
+                    Switch(
+                        checked = settings.useTaxTable,
+                        onCheckedChange = { enabled ->
+                            onSettingsChange(settings.copy(useTaxTable = enabled))
+                        }
+                    )
+                }
+
+                if (settings.useTaxTable) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Tabellår väljs automatiskt utifrån arbetsdatum (2025 eller 2026)",
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -532,8 +600,8 @@ private fun ButikOBRatesSection(
     )
     
     // Lokala textstängar för varje fält
-    val textValues = remember(settings.obRates) {
-        butikOBFields.map { (_, value) -> mutableStateOf((value * 100).toString()) }
+    val textValues = remember {
+        butikOBFields.map { (_, value) -> mutableStateOf(formatDecimal(value * 100)) }
     }
     
     Column(
@@ -596,8 +664,8 @@ private fun LagerOBRatesSection(
     )
     
     // Lokala textstängar för varje fält
-    val textValues = remember(settings.obRates) {
-        lagerOBFields.map { (_, value) -> mutableStateOf((value * 100).toString()) }
+    val textValues = remember {
+        lagerOBFields.map { (_, value) -> mutableStateOf(formatDecimal(value * 100)) }
     }
     
     Column(
@@ -650,7 +718,7 @@ private fun VacationContent(
     settings: Settings,
     onSettingsChange: (Settings) -> Unit
 ) {
-    var vacationRateText by remember(settings.vacationRate) { mutableStateOf(settings.vacationRate.toString()) }
+    var vacationRateText by remember { mutableStateOf(formatDecimal(settings.vacationRate)) }
     
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -660,6 +728,159 @@ private fun VacationContent(
             style = MaterialTheme.typography.body2,
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
         )
+        
+        // Betalningssätt för semesterersättning
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.1f)
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Text(
+                    text = "💰 Betalningssätt för semesterersättning",
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.primary
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                VacationPaymentMode.values().forEach { mode ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onSettingsChange(settings.copy(vacationPaymentMode = mode))
+                            }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = settings.vacationPaymentMode == mode,
+                            onClick = {
+                                onSettingsChange(settings.copy(vacationPaymentMode = mode))
+                            }
+                        )
+                        Column(
+                            modifier = Modifier.padding(start = 8.dp)
+                        ) {
+                            Text(
+                                text = mode.displayName,
+                                style = MaterialTheme.typography.body1,
+                                fontWeight = if (settings.vacationPaymentMode == mode) FontWeight.Bold else FontWeight.Normal
+                            )
+                            Text(
+                                text = mode.description,
+                                style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Ackumulerad semesterersättning (endast för separat ackumulering)
+        if (settings.vacationPaymentMode == VacationPaymentMode.SEPARATE_ACCUMULATION) {
+            var showWithdrawDialog by remember { mutableStateOf(false) }
+            
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                backgroundColor = MaterialTheme.colors.secondary.copy(alpha = 0.1f)
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "💰 Ackumulerad semesterersättning",
+                                style = MaterialTheme.typography.subtitle1,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.secondary
+                            )
+                            Text(
+                                text = "${String.format("%.2f", settings.accumulatedVacationPay)} kr",
+                                style = MaterialTheme.typography.h6,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                        
+                        if (settings.accumulatedVacationPay > 0) {
+                            Button(
+                                onClick = { showWithdrawDialog = true },
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.primary
+                                ),
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Text("Ta ut", color = Color.White)
+                            }
+                        }
+                    }
+                    
+                    Text(
+                        text = "Detta belopp har sparats från tidigare arbetspass och kan tas ut när du tar semester.",
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    
+                    // Visa historik över uttag om det finns några
+                    if (settings.vacationPayoutHistory.isNotEmpty()) {
+                        Text(
+                            text = "📋 Senaste uttag:",
+                            style = MaterialTheme.typography.subtitle2,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                        
+                        settings.vacationPayoutHistory.takeLast(3).forEach { payout ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "${payout.date}: ${payout.reason}",
+                                    style = MaterialTheme.typography.body2,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    text = "-${String.format("%.2f", payout.amount)} kr",
+                                    style = MaterialTheme.typography.body2,
+                                    color = MaterialTheme.colors.error
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (showWithdrawDialog) {
+                VacationWithdrawDialog(
+                    availableAmount = settings.accumulatedVacationPay,
+                    onDismiss = { showWithdrawDialog = false },
+                    onWithdraw = { amount, reason ->
+                        val payCalculator = com.example.timereportcalculator.calculator.PayCalculator()
+                        try {
+                            val updatedSettings = payCalculator.withdrawVacationPay(amount, reason, settings)
+                            onSettingsChange(updatedSettings)
+                            showWithdrawDialog = false
+                        } catch (e: Exception) {
+                            // Handle error - could show a toast or error message
+                        }
+                    }
+                )
+            }
+        }
         
         OutlinedTextField(
             value = vacationRateText,
@@ -692,8 +913,15 @@ private fun VacationContent(
                     style = MaterialTheme.typography.subtitle2,
                     fontWeight = FontWeight.Bold
                 )
+                val rateStr = formatDecimal(settings.vacationRate)
+                val infoText = when (settings.vacationPaymentMode) {
+                    VacationPaymentMode.INCLUDED_IN_SALARY ->
+                        "• Din inställda sats: ${rateStr}%\n• Läggs till varje månads utbetalning\n• Du får pengarna direkt varje månad"
+                    VacationPaymentMode.SEPARATE_ACCUMULATION ->
+                        "• Din inställda sats: ${rateStr}%\n• Sparas som separat semesterersättning\n• Tas ut när du tar semester"
+                }
                 Text(
-                    text = "• Standard enligt Handelsavtalet: 12%\n• Beräknas på all intjänad lön\n• Utbetalas när semester tas ut eller vid anställningens slut",
+                    text = infoText,
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -829,12 +1057,12 @@ private fun WorkTimeContent(
         }
         
         if (settings.workTimeSettings.automaticBreaks) {
-            var firstThresholdText by remember(settings.workTimeSettings.firstBreakThreshold) { mutableStateOf(settings.workTimeSettings.firstBreakThreshold.toString()) }
-            var firstMinutesText by remember(settings.workTimeSettings.firstBreakMinutes) { mutableStateOf(settings.workTimeSettings.firstBreakMinutes.toString()) }
-            var secondThresholdText by remember(settings.workTimeSettings.secondBreakThreshold) { mutableStateOf(settings.workTimeSettings.secondBreakThreshold.toString()) }
-            var secondMinutesText by remember(settings.workTimeSettings.secondBreakMinutes) { mutableStateOf(settings.workTimeSettings.secondBreakMinutes.toString()) }
-            var thirdThresholdText by remember(settings.workTimeSettings.thirdBreakThreshold) { mutableStateOf(settings.workTimeSettings.thirdBreakThreshold.toString()) }
-            var thirdMinutesText by remember(settings.workTimeSettings.thirdBreakMinutes) { mutableStateOf(settings.workTimeSettings.thirdBreakMinutes.toString()) }
+            var firstThresholdText by remember { mutableStateOf(formatDecimal(settings.workTimeSettings.firstBreakThreshold)) }
+            var firstMinutesText by remember { mutableStateOf(settings.workTimeSettings.firstBreakMinutes.toString()) }
+            var secondThresholdText by remember { mutableStateOf(formatDecimal(settings.workTimeSettings.secondBreakThreshold)) }
+            var secondMinutesText by remember { mutableStateOf(settings.workTimeSettings.secondBreakMinutes.toString()) }
+            var thirdThresholdText by remember { mutableStateOf(formatDecimal(settings.workTimeSettings.thirdBreakThreshold)) }
+            var thirdMinutesText by remember { mutableStateOf(settings.workTimeSettings.thirdBreakMinutes.toString()) }
             
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -1326,6 +1554,181 @@ private fun HolidayContent(
                     Text("Avbryt")
                 }
             }
+        )
+    }
+}
+
+@Composable
+private fun VacationWithdrawDialog(
+    availableAmount: Double,
+    onDismiss: () -> Unit,
+    onWithdraw: (amount: Double, reason: String) -> Unit
+) {
+    var amountText by remember { mutableStateOf("") }
+    var selectedReason by remember { mutableStateOf("Semester") }
+    var customReason by remember { mutableStateOf("") }
+    var showCustomReason by remember { mutableStateOf(false) }
+    
+    val predefinedReasons = listOf(
+        "Semester",
+        "Ekonomiskt behov",
+        "Sjukdom",
+        "Annan anledning"
+    )
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Ta ut semesterersättning",
+                style = MaterialTheme.typography.h6,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "Tillgängligt belopp: ${String.format("%.2f", availableAmount)} kr",
+                    style = MaterialTheme.typography.body1,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.primary
+                )
+                
+                OutlinedTextField(
+                    value = amountText,
+                    onValueChange = { newValue ->
+                        // Tillåt endast siffror och decimalpunkt
+                        if (newValue.isEmpty() || newValue.matches(Regex("^\\d*\\.?\\d*$"))) {
+                            amountText = newValue
+                        }
+                    },
+                    label = { Text("Belopp att ta ut") },
+                    trailingIcon = { Text("kr") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    isError = amountText.toDoubleOrNull()?.let { it > availableAmount || it <= 0 } ?: false
+                )
+                
+                if (amountText.toDoubleOrNull()?.let { it > availableAmount } == true) {
+                    Text(
+                        text = "Beloppet kan inte överstiga tillgängligt belopp",
+                        color = MaterialTheme.colors.error,
+                        style = MaterialTheme.typography.caption
+                    )
+                }
+                
+                Text(
+                    text = "Anledning:",
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                predefinedReasons.forEach { reason ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedReason = reason
+                                showCustomReason = reason == "Annan anledning"
+                            }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedReason == reason,
+                            onClick = {
+                                selectedReason = reason
+                                showCustomReason = reason == "Annan anledning"
+                            }
+                        )
+                        Text(
+                            text = reason,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
+                
+                if (showCustomReason) {
+                    OutlinedTextField(
+                        value = customReason,
+                        onValueChange = { customReason = it },
+                        label = { Text("Ange anledning") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    val amount = amountText.toDoubleOrNull()
+                    if (amount != null && amount > 0 && amount <= availableAmount) {
+                        val reason = if (showCustomReason && customReason.isNotBlank()) {
+                            customReason
+                        } else {
+                            selectedReason
+                        }
+                        onWithdraw(amount, reason)
+                    }
+                },
+                enabled = {
+                    val amount = amountText.toDoubleOrNull()
+                    amount != null && amount > 0 && amount <= availableAmount &&
+                    (!showCustomReason || customReason.isNotBlank())
+                }()
+            ) {
+                Text("Ta ut")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Avbryt")
+            }
+        }
+    )
+}
+
+@Composable
+private fun PersonalInfoContent(
+    settings: Settings,
+    onSettingsChange: (Settings) -> Unit
+) {
+    var employeeName by remember { mutableStateOf(settings.employeeName) }
+    var employerName by remember { mutableStateOf(settings.employerName) }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = "Anv\u00e4nds f\u00f6r l\u00f6nebesked (PDF-export)",
+            style = MaterialTheme.typography.caption,
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+        )
+
+        OutlinedTextField(
+            value = employeeName,
+            onValueChange = { newValue ->
+                employeeName = newValue
+                onSettingsChange(settings.copy(employeeName = newValue))
+            },
+            label = { Text("Ditt namn") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = employerName,
+            onValueChange = { newValue ->
+                employerName = newValue
+                onSettingsChange(settings.copy(employerName = newValue))
+            },
+            label = { Text("Arbetsgivare") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
     }
 }

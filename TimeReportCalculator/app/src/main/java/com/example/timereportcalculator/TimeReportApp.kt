@@ -342,7 +342,10 @@ fun TimeReportApp(
                             totalTax = totalTax,
                             totalNetPay = totalNetPay,
                             vacationRate = settings.vacationRate,
-                            totalOBBreakdown = totalOBBreakdown
+                            totalOBBreakdown = totalOBBreakdown,
+                            settings = settings,
+                            periodYear = filteredEntries.firstOrNull()?.date?.year
+                                ?: java.time.LocalDate.now().year
                         )
                     }
                 }

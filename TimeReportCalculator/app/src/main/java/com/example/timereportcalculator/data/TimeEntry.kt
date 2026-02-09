@@ -13,6 +13,7 @@ data class TimeEntry(
     val breakEnd: LocalTime? = null,
     val breakMinutes: Int = 0,
     val isRedDay: Boolean = false,
+    val isHalfDayHoliday: Boolean = false, // Aftonshelgdag: OB bara efter 12:00
     val isSickDay: Boolean = false,
     val sickDayNumber: Int = 1, // 1 = karensdag (0 kr), 2-14 = 80% av grundlön
     val workHours: Double = 0.0,
@@ -33,11 +34,18 @@ data class Settings(
     val obRates: OBRates = OBRates(),
     val contractLevel: ContractLevel = ContractLevel.EXPERIENCE_2_YEARS,
     val vacationRate: Double = 12.0, // Semesterersättning i procent
+    val vacationPaymentMode: VacationPaymentMode = VacationPaymentMode.INCLUDED_IN_SALARY, // Hur semesterersättning hanteras
+    val accumulatedVacationPay: Double = 0.0, // Ackumulerad semesterersättning för separat ackumulering
+    val vacationPayoutHistory: List<VacationPayout> = emptyList(), // Historik över uttagna semesterersättningar
     val workTimeSettings: WorkTimeSettings = WorkTimeSettings(),
     val calendarSettings: CalendarSettings = CalendarSettings(),
     val customHolidays: List<Holiday> = emptyList(),
     val automaticHolidayDetection: Boolean = true,
-    val timerSettings: TimerSettings = TimerSettings()
+    val timerSettings: TimerSettings = TimerSettings(),
+    val themeSettings: ThemeSettings = ThemeSettings(),
+    val useTaxTable: Boolean = false,
+    val employeeName: String = "",
+    val employerName: String = ""
 )
 
 data class OBRates(
@@ -91,4 +99,35 @@ data class TimerSettings(
     val enableBreakReminders: Boolean = true,
     val enableShiftEndReminders: Boolean = true,
     val notificationSound: Boolean = true
+)
+
+data class ThemeSettings(
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val useDynamicColors: Boolean = true,
+    val useMaterial3: Boolean = true
+)
+
+enum class ThemeMode(
+    val displayName: String,
+    val description: String
+) {
+    LIGHT("Ljust tema", "Alltid ljust tema"),
+    DARK("Mörkt tema", "Alltid mörkt tema"),
+    SYSTEM("Följ system", "Följer systemets tema-inställning")
+}
+
+enum class VacationPaymentMode(
+    val displayName: String,
+    val description: String
+) {
+    INCLUDED_IN_SALARY("Inkluderat i månadslön", "12% semesterersättning läggs till varje utbetalning"),
+    SEPARATE_ACCUMULATION("Separat ackumulering", "12% sparas som separat semesterersättning att ta ut senare")
+}
+
+data class VacationPayout(
+    val id: String = java.util.UUID.randomUUID().toString(),
+    val date: LocalDate = LocalDate.now(),
+    val amount: Double,
+    val description: String = "Uttag av semesterersättning",
+    val reason: String = "Manuellt uttag" // T.ex. "Semester", "Ekonomiskt behov", etc.
 )

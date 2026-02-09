@@ -22,6 +22,7 @@ data class BackupMetadata(
 class BackupManager(private val context: Context) {
     
     private val fileManager = FileManager(context)
+    private val googleDriveBackupManager = GoogleDriveBackupManager(context)
     private val prefs: SharedPreferences = context.getSharedPreferences("backup_prefs", Context.MODE_PRIVATE)
     
     companion object {
@@ -92,6 +93,18 @@ class BackupManager(private val context: Context) {
                 
                 if (isAutomatic) {
                     lastAutoBackup = LocalDateTime.now()
+                }
+                
+                // Upload to Google Drive if enabled
+                if (googleDriveBackupManager.isGoogleDriveEnabled && googleDriveBackupManager.isSignedIn()) {
+                    try {
+                        val driveResult = googleDriveBackupManager.uploadBackupToDrive(result.getOrNull() ?: fileName)
+                        if (driveResult.isSuccess) {
+                            // Successfully uploaded to Google Drive
+                        }
+                    } catch (e: Exception) {
+                        // Continue even if Google Drive upload fails
+                    }
                 }
                 
                 // Clean up old backups if needed
@@ -196,7 +209,8 @@ class BackupManager(private val context: Context) {
             isAutoBackupEnabled = isAutoBackupEnabled,
             backupIntervalHours = backupIntervalHours,
             maxBackups = maxBackups,
-            backupOnChanges = backupOnChanges
+            backupOnChanges = backupOnChanges,
+            isGoogleDriveEnabled = googleDriveBackupManager.isGoogleDriveEnabled
         )
     }
     
@@ -205,6 +219,35 @@ class BackupManager(private val context: Context) {
         backupIntervalHours = settings.backupIntervalHours
         maxBackups = settings.maxBackups
         backupOnChanges = settings.backupOnChanges
+        googleDriveBackupManager.isGoogleDriveEnabled = settings.isGoogleDriveEnabled
+    }
+    
+    // Google Drive backup functions
+    fun getGoogleDriveBackupManager(): GoogleDriveBackupManager = googleDriveBackupManager
+    
+    suspend fun enableGoogleDriveBackup(activity: androidx.activity.ComponentActivity): Result<String> {
+        val signInResult = googleDriveBackupManager.signInToGoogleDrive(activity)
+        return if (signInResult.isSuccess) {
+            Result.success("Google Drive backup aktiverat")
+        } else {
+            Result.failure(signInResult.exceptionOrNull() ?: Exception("Kunde inte aktivera Google Drive backup"))
+        }
+    }
+    
+    suspend fun disableGoogleDriveBackup() {
+        googleDriveBackupManager.signOutFromGoogleDrive()
+    }
+    
+    suspend fun uploadToGoogleDrive(fileName: String): Result<String> {
+        return googleDriveBackupManager.uploadBackupToDrive(fileName)
+    }
+    
+    suspend fun listGoogleDriveBackups(): Result<List<DriveBackupInfo>> {
+        return googleDriveBackupManager.listDriveBackups()
+    }
+    
+    suspend fun downloadFromGoogleDrive(fileId: String): Result<String> {
+        return googleDriveBackupManager.downloadBackupFromDrive(fileId)
     }
 }
 
@@ -212,5 +255,6 @@ data class BackupSettings(
     val isAutoBackupEnabled: Boolean = false,
     val backupIntervalHours: Int = 24,
     val maxBackups: Int = 10,
-    val backupOnChanges: Boolean = true
+    val backupOnChanges: Boolean = true,
+    val isGoogleDriveEnabled: Boolean = false
 )

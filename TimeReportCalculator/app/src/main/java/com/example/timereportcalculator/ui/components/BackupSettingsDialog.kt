@@ -308,6 +308,52 @@ fun BackupSettingsDialog(
                         }
                     }
                     
+                    // Google Drive backup setting
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        elevation = 2.dp
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    Icons.Default.CloudUpload,
+                                    contentDescription = "Google Drive",
+                                    tint = MaterialTheme.colors.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(start = 12.dp)
+                                ) {
+                                    Text(
+                                        text = "Google Drive backup",
+                                        style = MaterialTheme.typography.subtitle2,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "Automatisk backup till Google Drive",
+                                        style = MaterialTheme.typography.caption,
+                                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                                    )
+                                }
+                                Switch(
+                                    checked = settings.isGoogleDriveEnabled,
+                                    onCheckedChange = { 
+                                        settings = settings.copy(isGoogleDriveEnabled = it)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     // Buttons
